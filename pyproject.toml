@@ -8,7 +8,7 @@ version = "1.0.0"
 description = "One-click installer for 50 top AI agent skills — Claude Code, OpenCode, Antigravity, Cursor and more"
 readme = "README.md"
 license = { text = "MIT" }
-authors = [{ name = "skill-blast contributors" }]
+authors = [{ name = "KaizenCode21" }]
 keywords = ["claude", "opencode", "ai", "skills", "claude-code", "antigravity", "cursor", "llm", "gemini"]
 classifiers = [
     "Development Status :: 4 - Beta",
