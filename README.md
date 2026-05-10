@@ -6,10 +6,10 @@
 
 **One-click installer for 50 top AI agent skills**
 
-[![PyPI version](https://img.shields.io/pypi/v/skill-blast?color=cyan&style=flat-square)](https://pypi.org/project/skill-blast/)
-[![Python](https://img.shields.io/pypi/pyversions/skill-blast?style=flat-square)](https://pypi.org/project/skill-blast/)
+[![PyPI version](https://img.shields.io/pypi/v/skill-blast?color=cyan&style=flat-square&cache=none)](https://pypi.org/project/skill-blast/)
+[![Python](https://img.shields.io/pypi/pyversions/skill-blast?style=flat-square&cache=none)](https://pypi.org/project/skill-blast/)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green?style=flat-square)](LICENSE)
-[![Downloads](https://img.shields.io/pypi/dm/skill-blast?color=blue&style=flat-square)](https://pypi.org/project/skill-blast/)
+[![Downloads](https://img.shields.io/badge/downloads-new-blue?style=flat-square)](https://pypi.org/project/skill-blast/)
 [![OS: Windows, macOS, Linux](https://img.shields.io/badge/OS-Windows%20%7C%20macOS%20%7C%20Linux-lightgrey?style=flat-square)](#installation)
 
 Installs the **50 best community AI skills** into every agent you use —  
