@@ -2,7 +2,7 @@
 
 # 🚀 skill-blast
 
-![skill-blast banner](docs/social-preview.png)
+![skill-blast banner](https://raw.githubusercontent.com/Venkatesh-6921/skill-blast/main/docs/social-preview.png)
 
 **One-click installer for 50 top AI agent skills**
 
