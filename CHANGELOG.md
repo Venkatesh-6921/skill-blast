@@ -15,6 +15,10 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Agent detection tests
 - Troubleshooting guide in README
 - Management commands section in README
+- `--info <ID>` flag to show detailed skill metadata
+- `CODE_OF_CONDUCT.md` for the community
+- CLI integration tests (`tests/test_cli_integration.py`)
+- Social preview image for GitHub sharing
 
 ### Changed
 - Replaced `YOUR_USERNAME` placeholder with `Venkatesh-6921` in all files

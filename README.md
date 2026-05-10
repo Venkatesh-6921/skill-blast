@@ -2,6 +2,8 @@
 
 # 🚀 skill-blast
 
+![skill-blast banner](docs/social-preview.png)
+
 **One-click installer for 50 top AI agent skills**
 
 [![PyPI version](https://img.shields.io/pypi/v/skill-blast?color=cyan&style=flat-square)](https://pypi.org/project/skill-blast/)
@@ -267,6 +269,9 @@ skill-blast --uninstall --only Media
 
 # Health diagnostics — broken symlinks, cache status, git connectivity
 skill-blast --check
+
+# Show detailed metadata about a specific skill
+skill-blast --info 1
 ```
 
 ---

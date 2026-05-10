@@ -192,6 +192,32 @@ def cmd_list(category_filter: list[str] | None = None) -> None:
     console.print(f"\n[dim]Total: {len(skills)} skills across {len(CATEGORIES)} categories[/]")
 
 
+# ── Skill Info ──────────────────────────────────────────────────────────────────
+
+def cmd_info(skill_id: int) -> None:
+    skill = SKILLS_BY_ID.get(skill_id)
+    if not skill:
+        console.print(f"[bold red]Error:[/] Skill ID {skill_id} not found.")
+        sys.exit(1)
+
+    cat_display = _cat_display(skill.category)
+
+    table = Table(show_header=False, box=None, padding=(0, 2))
+    table.add_column("Key", style="bold cyan", width=12)
+    table.add_column("Value")
+
+    table.add_row("ID", str(skill.id))
+    table.add_row("Name", f"[bold]{skill.name}[/]")
+    table.add_row("Category", cat_display)
+    table.add_row("Description", skill.desc)
+    table.add_row("Repository", f"[link={skill.repo_url}]{skill.repo}[/link]")
+    if skill.subpath:
+        table.add_row("Subpath", skill.subpath)
+    table.add_row("Tags", ", ".join(skill.tags) if skill.tags else "None")
+
+    console.print(Panel(table, title=f"Skill Info: {skill.name}", border_style="cyan", expand=False))
+
+
 # ── Uninstall ───────────────────────────────────────────────────────────────────
 
 def run_uninstall(
@@ -422,6 +448,8 @@ Examples:
                         help="List all skills and exit")
     parser.add_argument("--uninstall", action="store_true",
                         help="Remove installed skills from agent directories")
+    parser.add_argument("--info", type=int, metavar="ID",
+                        help="Show detailed info about a specific skill")
     parser.add_argument("--check", action="store_true",
                         help="Run health diagnostics on your skill-blast installation")
     parser.add_argument("--force-agents", action="store_true",
@@ -434,6 +462,12 @@ Examples:
     if args.list:
         print_banner()
         cmd_list(category_filter=args.only)
+        return
+
+    # ── Info only ──────────────────────────────────────────────────────────────
+    if args.info is not None:
+        print_banner()
+        cmd_info(args.info)
         return
 
     # ── Health check ──────────────────────────────────────────────────────────
