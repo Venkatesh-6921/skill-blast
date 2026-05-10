@@ -1,0 +1,55 @@
+name: Skill Request
+description: Suggest a new skill to add to the list
+labels: ["skill-request"]
+body:
+  - type: markdown
+    attributes:
+      value: "Know a great AI agent skill that should be in skill-blast? Tell us about it!"
+
+  - type: input
+    id: skill-name
+    attributes:
+      label: Skill Name
+      placeholder: "e.g. my-awesome-skill"
+    validations:
+      required: true
+
+  - type: input
+    id: repo
+    attributes:
+      label: GitHub Repo
+      placeholder: "owner/repo  (must be public)"
+    validations:
+      required: true
+
+  - type: input
+    id: subpath
+    attributes:
+      label: Subpath (if skill is inside a larger repo)
+      placeholder: "e.g. skills/my-skill  (leave blank if whole repo is the skill)"
+
+  - type: dropdown
+    id: category
+    attributes:
+      label: Category
+      options:
+        - UI/Design
+        - Content
+        - Writing
+        - Research
+        - Marketing
+        - Product
+        - Engineering
+        - Media
+        - Health
+        - New category (explain below)
+    validations:
+      required: true
+
+  - type: textarea
+    id: why
+    attributes:
+      label: Why should it be included?
+      description: What problem does it solve? What makes it stand out?
+    validations:
+      required: true

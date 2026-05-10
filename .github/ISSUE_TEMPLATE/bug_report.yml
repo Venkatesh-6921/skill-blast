@@ -1,0 +1,49 @@
+name: Bug Report
+description: Something broke — help us fix it
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: "Thanks for taking the time to report a bug!"
+
+  - type: input
+    id: os
+    attributes:
+      label: Operating System
+      placeholder: "e.g. Ubuntu 24.04 / macOS 15 / Windows 11"
+    validations:
+      required: true
+
+  - type: input
+    id: python
+    attributes:
+      label: Python Version
+      placeholder: "python --version output"
+    validations:
+      required: true
+
+  - type: input
+    id: skill-blast-version
+    attributes:
+      label: skill-blast Version
+      placeholder: "skill-blast --version output"
+    validations:
+      required: true
+
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: What did you run and what did you see?
+      placeholder: |
+        Command: skill-blast --all
+        Error: ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: What did you expect?
+    validations:
+      required: true

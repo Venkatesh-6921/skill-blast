@@ -1,0 +1,56 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "skill-blast"
+version = "1.0.0"
+description = "One-click installer for 50 top AI agent skills — Claude Code, OpenCode, Antigravity, Cursor and more"
+readme = "README.md"
+license = { text = "MIT" }
+authors = [{ name = "skill-blast contributors" }]
+keywords = ["claude", "opencode", "ai", "skills", "claude-code", "antigravity", "cursor", "llm", "gemini"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "Intended Audience :: End Users/Desktop",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Software Development :: Libraries",
+    "Topic :: Utilities",
+]
+requires-python = ">=3.9"
+dependencies = ["rich>=13.0.0"]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0",
+    "pytest-cov",
+]
+
+[project.scripts]
+skill-blast = "skill_blast.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/Venkatesh-6921/skill-blast"
+Documentation = "https://github.com/Venkatesh-6921/skill-blast#readme"
+Repository = "https://github.com/Venkatesh-6921/skill-blast"
+Issues = "https://github.com/Venkatesh-6921/skill-blast/issues"
+Changelog = "https://github.com/Venkatesh-6921/skill-blast/blob/main/CHANGELOG.md"
+
+[tool.hatch.build.targets.wheel]
+packages = ["skill_blast"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-v --tb=short"
+
+[tool.coverage.run]
+source = ["skill_blast"]
+omit = ["tests/*"]
