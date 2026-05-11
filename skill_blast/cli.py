@@ -162,11 +162,47 @@ def run_wizard() -> tuple[list[str], list[str], bool]:
 # ── List all skills ─────────────────────────────────────────────────────────────
 
 def cmd_list(category_filter: list[str] | None = None) -> None:
-    """Launch the interactive TUI for browsing skills."""
+    """Launch the interactive TUI or print static list if not a TTY."""
     import os
+    import sys
+    
+    # Fallback for non-interactive environments (CI, pipes)
+    if not sys.stdout.isatty() or os.environ.get("SKILLBLAST_NO_TUI"):
+        skills = ALL_SKILLS if not category_filter else [s for s in ALL_SKILLS if s.category in category_filter]
+        skills = sorted(skills, key=lambda x: (x.category, x.id))
+
+        if not skills:
+            console.print("[yellow]No skills found matching the filter.[/]")
+            return
+
+        from collections import defaultdict
+        skills_by_category = defaultdict(list)
+        for s in skills:
+            skills_by_category[s.category].append(s)
+
+        console.print(f"[bold cyan]skill-blast — {len(skills)} Skills[/]\n", justify="center")
+
+        for category, cat_skills in skills_by_category.items():
+            # Minimalist header for static output
+            console.print(f"[bold underline]{category}[/]")
+            
+            table = Table(box=box.SIMPLE, show_header=True, header_style="bold dim", expand=True)
+            table.add_column("ID", justify="right", style="cyan", width=4, no_wrap=True)
+            table.add_column("Skill", style="white", width=35)
+            table.add_column("Description", style="dim")
+
+            for s in cat_skills:
+                skill_info = f"[bold]{s.name}[/]\n[dim]{s.repo}[/]"
+                table.add_row(str(s.id), skill_info, s.desc)
+
+            console.print(table)
+            console.print()
+
+        console.print(f"[dim]Total: {len(skills)} skills across {len(skills_by_category)} categories[/]")
+        return
+
     from .tui import SkillBlastTUI
     
-    # Optional: pass filter via environment if needed
     if category_filter:
         os.environ["SKILLBLAST_TUI_FILTER"] = ",".join(category_filter)
         

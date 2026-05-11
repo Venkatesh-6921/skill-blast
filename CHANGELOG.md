@@ -7,6 +7,12 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+## [2.1.1] — 2026-05-11
+
+### Fixed
+- **CI/Headless Support**: Added a TTY check to the `--list` command. If the environment is non-interactive (like GitHub Actions), `skill-blast` now automatically falls back to a static list output instead of launching the full-screen TUI.
+
+
 ## [2.1.0] — 2026-05-11
 
 ### Added
