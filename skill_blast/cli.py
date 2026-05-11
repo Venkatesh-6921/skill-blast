@@ -478,12 +478,28 @@ Examples:
                         help="Install to ALL agents even if not detected")
     parser.add_argument("--no-wizard", action="store_true",
                         help="Skip interactive wizard; use flags only")
+    parser.add_argument("--add", metavar="GITHUB_REPO",
+                        help="Add a custom skill from a GitHub repository (e.g. username/repo)")
+    parser.add_argument("--category", metavar="CATEGORY", default="Custom",
+                        help="Category for the custom skill (default: Custom)")
+    parser.add_argument("--desc", metavar="DESCRIPTION", default="Custom user-added skill",
+                        help="Description for the custom skill")
     args = parser.parse_args()
 
     # ── List only ──────────────────────────────────────────────────────────────
     if args.list:
         print_banner()
         cmd_list(category_filter=args.only)
+        return
+
+    # ── Add custom skill ───────────────────────────────────────────────────────
+    if args.add:
+        from .skills import add_custom_skill
+        print_banner()
+        console.print(f"[bold cyan]Adding custom skill:[/] {args.add}")
+        skill = add_custom_skill(args.add, args.category, args.desc)
+        console.print(f"[green]✓ Successfully added {skill.name} to local database.[/]")
+        console.print("It will be included in future installations.")
         return
 
     # ── Info only ──────────────────────────────────────────────────────────────
@@ -517,7 +533,7 @@ Examples:
 
     # ── Decide: wizard or flags ────────────────────────────────────────────────
     use_wizard = not (args.all or args.agents or args.only or args.skip
-                      or args.dry_run or args.no_wizard or args.uninstall)
+                      or args.dry_run or args.no_wizard or args.uninstall or args.add)
 
     if use_wizard:
         # Non-developer path

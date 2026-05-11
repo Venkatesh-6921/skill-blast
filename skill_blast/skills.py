@@ -5,6 +5,8 @@ Source: 50 Best Claude Code Skills (community-curated list).
 
 from dataclasses import dataclass
 from typing import Optional
+import json
+from pathlib import Path
 
 
 @dataclass
@@ -261,6 +263,58 @@ ALL_SKILLS: list[Skill] = [
           "Health", ["dna", "genome", "ancestry"]),
 ]
 
+# Load custom skills
+_CUSTOM_SKILLS_FILE = Path.home() / ".skill-blast" / "custom_skills.json"
+if _CUSTOM_SKILLS_FILE.exists():
+    try:
+        custom_data = json.loads(_CUSTOM_SKILLS_FILE.read_text(encoding="utf-8"))
+        for c in custom_data:
+            ALL_SKILLS.append(Skill(**c))
+    except Exception:
+        pass
+
 # Lookup helpers
 SKILLS_BY_ID: dict[int, Skill] = {s.id: s for s in ALL_SKILLS}
 CATEGORIES: list[str] = sorted(set(s.category for s in ALL_SKILLS))
+
+def add_custom_skill(repo: str, category: str = "Custom", desc: str = "Custom user-added skill") -> Skill:
+    name = repo.split("/")[-1]
+    new_id = max(s.id for s in ALL_SKILLS) + 1 if ALL_SKILLS else 1
+    
+    skill = Skill(
+        id=new_id,
+        name=name,
+        repo=repo,
+        subpath=None,
+        desc=desc,
+        category=category,
+        tags=["custom"]
+    )
+    
+    custom = []
+    if _CUSTOM_SKILLS_FILE.exists():
+        try:
+            custom = json.loads(_CUSTOM_SKILLS_FILE.read_text(encoding="utf-8"))
+        except Exception:
+            pass
+            
+    custom.append({
+        "id": skill.id,
+        "name": skill.name,
+        "repo": skill.repo,
+        "subpath": skill.subpath,
+        "desc": skill.desc,
+        "category": skill.category,
+        "tags": skill.tags
+    })
+    
+    _CUSTOM_SKILLS_FILE.parent.mkdir(parents=True, exist_ok=True)
+    _CUSTOM_SKILLS_FILE.write_text(json.dumps(custom, indent=2), encoding="utf-8")
+    
+    ALL_SKILLS.append(skill)
+    SKILLS_BY_ID[skill.id] = skill
+    if skill.category not in CATEGORIES:
+        CATEGORIES.append(skill.category)
+        CATEGORIES.sort()
+        
+    return skill
