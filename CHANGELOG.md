@@ -7,6 +7,13 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+## [2.1.3] — 2026-05-11
+
+### Fixed
+
+- **TUI Layout Fix**: Resolved empty `DataTable` rendering inside `TabbedContent`. The internal `ContentSwitcher` widget lacked an explicit `height` constraint, causing all tab panes to collapse to zero height. Added proper CSS layout chain (`Screen → TabbedContent → ContentSwitcher → TabPane → DataTable`, all `1fr`).
+- **Data Population Timing**: Moved `DataTable` row population from `compose()` to `on_mount()` to ensure widgets are fully initialized before receiving data.
+
 ## [2.1.2] — 2026-05-11
 
 ### Fixed

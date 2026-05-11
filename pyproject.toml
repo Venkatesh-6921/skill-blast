@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "skill-blast"
-version = "2.1.2"
+version = "2.1.3"
 description = "One-click installer for 50 top AI agent skills — Claude Code, OpenCode, Antigravity, Cursor and more"
 readme = "README.md"
 license = { text = "MIT" }
