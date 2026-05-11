@@ -7,6 +7,7 @@ def test_cli_version():
         [sys.executable, "-m", "skill_blast", "--version"],
         capture_output=True,
         text=True,
+        encoding="utf-8",
     )
     assert result.returncode == 0
     assert "skill-blast" in result.stdout
@@ -16,6 +17,7 @@ def test_cli_list():
         [sys.executable, "-m", "skill_blast", "--list"],
         capture_output=True,
         text=True,
+        encoding="utf-8",
     )
     assert result.returncode == 0
     assert "frontend-design" in result.stdout
@@ -26,6 +28,7 @@ def test_cli_info_valid():
         [sys.executable, "-m", "skill_blast", "--info", "1"],
         capture_output=True,
         text=True,
+        encoding="utf-8",
     )
     assert result.returncode == 0
     assert "frontend-design" in result.stdout
@@ -36,6 +39,7 @@ def test_cli_info_invalid():
         [sys.executable, "-m", "skill_blast", "--info", "999"],
         capture_output=True,
         text=True,
+        encoding="utf-8",
     )
     assert result.returncode == 1
     assert "Error: Skill ID 999 not found" in result.stdout
@@ -45,6 +49,7 @@ def test_cli_dry_run():
         [sys.executable, "-m", "skill_blast", "--dry-run", "--only", "Health", "--agents", "claude-code"],
         capture_output=True,
         text=True,
+        encoding="utf-8",
     )
     assert result.returncode == 0
     assert "DRY RUN — no files will be written" in result.stdout
