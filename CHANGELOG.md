@@ -7,6 +7,12 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+## [2.0.3] — 2026-05-11
+
+### Changed
+- **List UI Upgrade**: The `skill-blast --list` command now outputs a beautiful, category-grouped multi-table layout instead of a single massive table. The `Repo` identifier has been merged directly underneath the `Skill Name`, making descriptions much easier to read without dense horizontal text wrapping.
+
+
 ## [2.0.2] — 2026-05-11
 
 ### Fixed

@@ -19,6 +19,7 @@ from rich.progress import (BarColumn, MofNCompleteColumn, Progress,
 from rich.prompt import Confirm, Prompt
 from rich.table import Table
 from rich.text import Text
+from rich import box
 
 from . import __version__
 from .agents import AGENTS, detect_agents
@@ -164,28 +165,40 @@ def cmd_list(category_filter: list[str] | None = None) -> None:
     skills = ALL_SKILLS if not category_filter else [s for s in ALL_SKILLS if s.category in category_filter]
     skills = sorted(skills, key=lambda x: (x.category, x.id))
 
-    table = Table(
-        title=f"[bold]skill-blast — {len(skills)} Skills[/]",
-        border_style="bright_black",
-        show_lines=False,
-        expand=True,
-    )
-    table.add_column("ID", style="dim", width=4, no_wrap=True)
-    table.add_column("Category", width=14)
-    table.add_column("Name", width=24, style="bold")
-    table.add_column("Repo", style="dim cyan", width=34)
-    table.add_column("Description")
+    if not skills:
+        console.print("[yellow]No skills found matching the filter.[/]")
+        return
 
-    prev_cat = ""
+    from collections import defaultdict
+    skills_by_category = defaultdict(list)
     for s in skills:
-        cat_display = ""
-        if s.category != prev_cat:
-            cat_display = _cat_display(s.category)
-            prev_cat = s.category
-        table.add_row(str(s.id), cat_display, s.name, s.repo, s.desc)
+        skills_by_category[s.category].append(s)
 
-    console.print(table)
-    console.print(f"\n[dim]Total: {len(skills)} skills across {len(CATEGORIES)} categories[/]")
+    console.print(f"[bold cyan]skill-blast — {len(skills)} Skills[/]\n", justify="center")
+
+    for category, cat_skills in skills_by_category.items():
+        # Category header
+        cat_display = _cat_display(category)
+        console.print(f"[bold]{cat_display}[/]")
+        
+        table = Table(
+            box=box.SIMPLE,
+            show_header=True,
+            header_style="bold dim",
+            expand=True,
+        )
+        table.add_column("ID", justify="right", style="cyan", width=4, no_wrap=True)
+        table.add_column("Skill", style="white", width=35)
+        table.add_column("Description", style="dim")
+
+        for s in cat_skills:
+            skill_info = f"[bold]{s.name}[/]\n[dim]{s.repo}[/]"
+            table.add_row(str(s.id), skill_info, s.desc)
+
+        console.print(table)
+        console.print()
+
+    console.print(f"[dim]Total: {len(skills)} skills across {len(skills_by_category)} categories[/]")
 
 
 # ── Skill Info ──────────────────────────────────────────────────────────────────
