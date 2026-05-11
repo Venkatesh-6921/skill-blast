@@ -65,7 +65,7 @@ ALL_SKILLS: list[Skill] = [
           "Generative art with p5.js — seeded randomness, flow fields, particle systems",
           "UI/Design", ["art", "generative", "p5js"]),
 
-    Skill(19, "nothing-design",      "jqueryscript/awesome-claude-code",     None,
+    Skill(19, "nothing-design",      "dominikmartn/nothing-design-skill",    "nothing-design",
           "Generates UI in Nothing Phone's design language — monochrome, typographic, industrial",
           "UI/Design", ["ui", "design", "minimalist"]),
 
@@ -81,7 +81,7 @@ ALL_SKILLS: list[Skill] = [
           "Generates hand-drawn Excalidraw diagrams from a prompt — animated SVG, PNG export",
           "UI/Design", ["diagrams", "excalidraw", "svg"]),
 
-    Skill(23, "design-auditor",      "BehiSecc/awesome-claude-skills",       None,
+    Skill(23, "design-auditor",      "Ashutos1997/claude-design-auditor-skill", None,
           "Audits designs against 17 professional rules: typography, WCAG, spacing — scores /100",
           "UI/Design", ["audit", "wcag", "typography"]),
 
@@ -122,7 +122,7 @@ ALL_SKILLS: list[Skill] = [
           "Publish full articles to X/Twitter directly from Claude Code — threading + formatting",
           "Content", ["twitter", "publishing", "longform"]),
 
-    Skill(29, "twitter-algorithm",   "ComposioHQ/awesome-claude-skills",     None,
+    Skill(29, "twitter-algorithm",   "ComposioHQ/awesome-claude-skills",     "twitter-algorithm-optimizer",
           "Analyzes + rewrites tweets using Twitter's open-source algorithm — optimizes real reach",
           "Content", ["twitter", "algorithm", "reach"]),
 
@@ -172,7 +172,7 @@ ALL_SKILLS: list[Skill] = [
           "55,000-word email marketing guide — subject lines, lifecycle flows, win-back sequences",
           "Marketing", ["email", "marketing", "automation"]),
 
-    Skill(30, "competitive-ads",     "ComposioHQ/awesome-claude-skills",     None,
+    Skill(30, "competitive-ads",     "ComposioHQ/awesome-claude-skills",     "competitive-ads-extractor",
           "Pulls competitors' ads from ad libraries — analyzes messaging + creative patterns",
           "Marketing", ["ads", "competitive", "analysis"]),
 
@@ -218,7 +218,7 @@ ALL_SKILLS: list[Skill] = [
           "Karpathy-inspired self-improvement engine — 9 modes: code-pr, deployment, marketing…",
           "Engineering", ["research", "automation", "ai"]),
 
-    Skill(45, "dev-browser",         "jqueryscript/awesome-claude-code",     None,
+    Skill(45, "dev-browser",         "SawyerHood/dev-browser",               None,
           "Gives your agent a web browser — end-to-end QA, research, automation",
           "Engineering", ["browser", "automation", "qa"]),
 
@@ -247,16 +247,16 @@ ALL_SKILLS: list[Skill] = [
           "Full lifecycle: lyrics → Suno prompts → per-stem mixing → mastering → distribution",
           "Media", ["music", "suno", "production"]),
 
-    Skill(40, "generative-media",    "jqueryscript/awesome-claude-code",     None,
+    Skill(40, "generative-media",    "SamurAIGPT/Generative-Media-Skills",   None,
           "Multi-modal generative media: image, video, audio across AI providers",
           "Media", ["generative", "multimodal", "media"]),
 
     # ── Health ──────────────────────────────────────────────────────────────────
-    Skill(49, "personal-health",     "BehiSecc/awesome-claude-skills",       None,
+    Skill(49, "personal-health",     "Aperivue/medsci-skills",               None,
           "Analyzes medical reports, tracks health metrics, personalized wellness suggestions",
           "Health", ["health", "medical", "wellness"]),
 
-    Skill(50, "dna-analysis",        "BehiSecc/awesome-claude-skills",       None,
+    Skill(50, "dna-analysis",        "shmlkv/dna-claude-analysis",           None,
           "Personal genome analysis from 23andMe/Ancestry — 17 categories including pharmacogenomics",
           "Health", ["dna", "genome", "ancestry"]),
 ]

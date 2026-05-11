@@ -7,6 +7,12 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+## [1.1.1] — 2026-05-11
+
+### Fixed
+- Fixed 8 skills that were pointing to "awesome-list" repos instead of the actual skill repositories (`nothing-design`, `dev-browser`, `generative-media`, `design-auditor`, `personal-health`, `dna-analysis`, `twitter-algorithm`, `competitive-ads`).
+
+
 ## [1.1.0] — 2026-05-11
 
 ### Added
