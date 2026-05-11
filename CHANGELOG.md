@@ -7,6 +7,12 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+## [2.0.2] — 2026-05-11
+
+### Fixed
+- **Concurrent Git Conflicts**: Resolved errors such as `Another git process seems to be running in this repository` and random command failures caused by multi-threaded `git fetch/reset` operations simultaneously targeting the same locally cached GitHub repository when multiple skills exist in a single repository. Implemented per-repository thread locks (`_REPO_LOCKS`) and an `UPDATED_REPOS` cache.
+
+
 ## [2.0.1] — 2026-05-11
 
 ### Fixed

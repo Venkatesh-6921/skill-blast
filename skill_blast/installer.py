@@ -10,6 +10,7 @@ import platform
 import shutil
 import subprocess
 import threading
+from collections import defaultdict
 from pathlib import Path
 from typing import Optional
 
@@ -23,6 +24,8 @@ STORE_DIR = HOME / ".skill-blast" / "skills"
 
 FAILED_REPOS: set[str] = set()   # repos that failed this session — skip retries
 _FAILED_LOCK = threading.Lock()  # protects FAILED_REPOS in concurrent installs
+UPDATED_REPOS: set[str] = set()
+_REPO_LOCKS = defaultdict(threading.Lock)
 
 
 # ── Git helpers ────────────────────────────────────────────────────────────────
@@ -64,21 +67,26 @@ def ensure_repo(repo: str, update: bool = False) -> tuple[bool, str]:
 
     dest = CACHE_DIR / repo.replace("/", "__")
 
-    if dest.exists():
-        if update:
-            ok, msg = _pull(dest)
-            if not ok:
-                with _FAILED_LOCK:
-                    FAILED_REPOS.add(repo)
-            return ok, f"updated — {msg}"
-        return True, "cached"
+    with _REPO_LOCKS[repo]:
+        if dest.exists():
+            if update and repo not in UPDATED_REPOS:
+                ok, msg = _pull(dest)
+                if not ok:
+                    with _FAILED_LOCK:
+                        FAILED_REPOS.add(repo)
+                else:
+                    UPDATED_REPOS.add(repo)
+                return ok, f"updated — {msg}"
+            return True, "cached" if not update else "updated — ok"
 
-    dest.parent.mkdir(parents=True, exist_ok=True)
-    ok, msg = _clone(repo, dest)
-    if not ok:
-        with _FAILED_LOCK:
-            FAILED_REPOS.add(repo)
-    return ok, msg
+        dest.parent.mkdir(parents=True, exist_ok=True)
+        ok, msg = _clone(repo, dest)
+        if not ok:
+            with _FAILED_LOCK:
+                FAILED_REPOS.add(repo)
+        else:
+            UPDATED_REPOS.add(repo)
+        return ok, msg
 
 
 def batch_update_repos(repos: list[str], max_workers: int = 4) -> dict[str, tuple[bool, str]]:
