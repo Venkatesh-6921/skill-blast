@@ -114,24 +114,41 @@ _SKILL_CANDIDATES = [
 ]
 
 
-def _ensure_skill_md(skill_dir: Path) -> None:
+def _ensure_skill_md(skill_dir: Path, skill: Skill) -> None:
     """
     If the skill directory lacks a SKILL.md, create one from the best
     available candidate file so that Claude Code's /skills can discover it.
     The original file is preserved; SKILL.md is a copy of its content.
     """
     skill_md = skill_dir / "SKILL.md"
-    if skill_md.exists():
-        return
+    
+    if not skill_md.exists():
+        for candidate in _SKILL_CANDIDATES:
+            source = skill_dir / candidate
+            if source.exists():
+                try:
+                    skill_md.write_text(source.read_text(encoding="utf-8", errors="replace"))
+                except Exception:
+                    pass  # non-critical — skill still works, just won't appear in /skills
+                break
 
-    for candidate in _SKILL_CANDIDATES:
-        source = skill_dir / candidate
-        if source.exists():
-            try:
-                skill_md.write_text(source.read_text(encoding="utf-8", errors="replace"))
-            except Exception:
-                pass  # non-critical — skill still works, just won't appear in /skills
-            return
+    _ensure_frontmatter(skill_md, skill)
+
+def _ensure_frontmatter(skill_md: Path, skill: Skill) -> None:
+    """
+    Claude Code ONLY recognizes SKILL.md files that begin with YAML frontmatter.
+    If the file exists but lacks frontmatter, we inject it using our metadata.
+    """
+    if not skill_md.exists():
+        return
+        
+    try:
+        content = skill_md.read_text(encoding="utf-8", errors="replace")
+        if not content.strip().startswith("---"):
+            frontmatter = f"---\nname: {skill.name}\ndescription: {skill.desc}\n---\n\n"
+            skill_md.write_text(frontmatter + content, encoding="utf-8")
+    except Exception:
+        pass
 
 
 def _link_or_copy(src: Path, dest: Path) -> None:
@@ -201,7 +218,7 @@ def install_skill(
 
     # ── 4. Ensure SKILL.md exists ──────────────────────────────────────────────
     if not dry_run:
-        _ensure_skill_md(store_dest)
+        _ensure_skill_md(store_dest, skill)
 
     # ── 5. Agent links ─────────────────────────────────────────────────────────
     for agent_dir in agent_dirs:
