@@ -12,12 +12,10 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ### Fixed
 - **TUI Bugfix**: Resolved `BadIdentifier` error in the interactive list. The category `UI/Design` was causing an invalid widget ID because it contained a `/`. Tab IDs are now properly sanitized.
 
-
 ## [2.1.1] — 2026-05-11
 
 ### Fixed
 - **CI/Headless Support**: Added a TTY check to the `--list` command. If the environment is non-interactive (like GitHub Actions), `skill-blast` now automatically falls back to a static list output instead of launching the full-screen TUI.
-
 
 ## [2.1.0] — 2026-05-11
 
@@ -25,25 +23,21 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - **Interactive TUI for `--list`**: Replaced the static list output with a full-screen interactive TUI built with `Textual`. Use `Tab` or mouse clicks to switch between category tabs, and arrow keys to scroll through skills.
 - **New Dependency**: Added `textual>=0.80.0` for the interactive terminal interface.
 
-
 ## [2.0.3] — 2026-05-11
 
 ### Changed
 - **List UI Upgrade**: The `skill-blast --list` command now outputs a beautiful, category-grouped multi-table layout instead of a single massive table. The `Repo` identifier has been merged directly underneath the `Skill Name`, making descriptions much easier to read without dense horizontal text wrapping.
-
 
 ## [2.0.2] — 2026-05-11
 
 ### Fixed
 - **Concurrent Git Conflicts**: Resolved errors such as `Another git process seems to be running in this repository` and random command failures caused by multi-threaded `git fetch/reset` operations simultaneously targeting the same locally cached GitHub repository when multiple skills exist in a single repository. Implemented per-repository thread locks (`_REPO_LOCKS`) and an `UPDATED_REPOS` cache.
 
-
 ## [2.0.1] — 2026-05-11
 
 ### Fixed
 - **Permission Denied Error**: Resolved `[Errno 13] Permission denied` errors during `--update` by correctly ignoring `.git` directories when copying from cache to central store.
 - **Fast-forward Error**: Resolved `fatal: Cannot fast-forward to multiple branches` error by using explicit `git fetch` and `git reset --hard FETCH_HEAD` instead of `git pull --ff-only`.
-
 
 ## [2.0.0] — 2026-05-11
 
@@ -53,12 +47,10 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - **Custom Skill Adder**: Added `--add <github-repo>` flag so users can inject arbitrary GitHub repositories into their local skill-blast database persistently.
 - **Update with Safe Backup**: `--update` now properly pulls the newest branch and writes a `SKILL.md.bak` file before overwriting, protecting local user tweaks.
 
-
 ## [1.1.1] — 2026-05-11
 
 ### Fixed
 - Fixed 8 skills that were pointing to "awesome-list" repos instead of the actual skill repositories (`nothing-design`, `dev-browser`, `generative-media`, `design-auditor`, `personal-health`, `dna-analysis`, `twitter-algorithm`, `competitive-ads`).
-
 
 ## [1.1.0] — 2026-05-11
 
@@ -69,7 +61,6 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ### Changed
 - Thread-safe `FAILED_REPOS` tracking with `threading.Lock` in installer module.
 
-
 ## [1.0.1] — 2026-05-11
 
 ### Fixed
@@ -77,6 +68,7 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Fixed integration test crashes on Windows CI by forcing `utf-8` decoding in subprocesses.
 - Skipped symlink creation tests on Windows CI runners missing Developer Mode.
 - Updated `actions/checkout` to v5 and `actions/setup-python` to v6 in CI pipelines.
+
 ### Added
 - `--uninstall` flag to remove installed skills from agent directories
 - `--check` flag for health diagnostics (broken symlinks, cache/store status, git connectivity)
