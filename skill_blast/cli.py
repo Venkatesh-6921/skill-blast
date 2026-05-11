@@ -10,6 +10,7 @@ import sys
 import platform
 from pathlib import Path
 
+import questionary
 from rich.console import Console
 from rich.panel import Panel
 from rich.progress import (BarColumn, MofNCompleteColumn, Progress,
@@ -81,38 +82,27 @@ def run_wizard() -> tuple[list[str], list[str], bool]:
 
     # ── Step 1: Agents ─────────────────────────────────────────────────────────
     detected = detect_agents()
-    console.print("[bold]Step 1 of 3[/] — [cyan]Which AI agents do you use?[/]\n")
 
-    console.print("  Detected on your machine:")
-    if detected:
-        for key, agent in detected.items():
-            console.print(f"    [green]✓[/] {agent['icon']} {agent['name']}")
-    else:
-        console.print("    [yellow]None detected automatically[/]")
-    console.print()
+    agent_choices = []
+    for key, agent in AGENTS.items():
+        is_detected = key in detected
+        mark = " (Detected)" if is_detected else ""
+        agent_choices.append(questionary.Choice(
+            title=f"{agent['icon']} {agent['name']}{mark}",
+            value=key,
+            checked=is_detected
+        ))
+        
+    chosen_agents = questionary.checkbox(
+        "Which AI agents do you want to install skills for?",
+        choices=agent_choices,
+        instruction="(Use Space to select, Enter to confirm)"
+    ).ask()
 
-    console.print("  All available agents:")
-    agent_keys = list(AGENTS.keys())
-    for i, (key, agent) in enumerate(AGENTS.items(), 1):
-        mark = "[green]detected[/]" if key in detected else "[dim]not detected[/]"
-        console.print(f"    [bold]{i}[/]. {agent['icon']} {agent['name']:20} {mark}")
-
-    console.print()
-    console.print("  [dim]Enter numbers separated by commas. Press ENTER to use detected agents.[/]")
-    raw = Prompt.ask("  Your choice", default=",".join(str(i) for i, k in enumerate(agent_keys, 1) if k in detected) or "1")
-
-    chosen_agents: list[str] = []
-    if raw.strip().lower() in ("all", "a"):
-        chosen_agents = agent_keys
-    else:
-        for part in raw.split(","):
-            try:
-                idx = int(part.strip()) - 1
-                if 0 <= idx < len(agent_keys):
-                    chosen_agents.append(agent_keys[idx])
-            except ValueError:
-                pass
-
+    # If the user cancels (Ctrl+C), it returns None
+    if chosen_agents is None:
+        sys.exit(0)
+    
     if not chosen_agents:
         chosen_agents = list(detected.keys()) or ["claude-code"]
 
@@ -121,31 +111,26 @@ def run_wizard() -> tuple[list[str], list[str], bool]:
     console.print()
 
     # ── Step 2: Categories ─────────────────────────────────────────────────────
-    console.print("[bold]Step 2 of 3[/] — [cyan]Which skill categories do you want?[/]\n")
-
     cats = sorted(CATEGORIES)
-    for i, cat in enumerate(cats, 1):
+    cat_choices = []
+    for cat in cats:
         count = sum(1 for s in ALL_SKILLS if s.category == cat)
         icon = CATEGORY_ICONS.get(cat, "•")
-        color = CATEGORY_COLORS.get(cat, "white")
-        console.print(f"    [bold]{i}[/]. [{color}]{icon} {cat:20}[/] [dim]({count} skills)[/]")
+        cat_choices.append(questionary.Choice(
+            title=f"{icon} {cat} ({count} skills)",
+            value=cat,
+            checked=True
+        ))
 
-    console.print()
-    console.print("  [dim]Enter numbers, 'all' for everything, or ENTER for all.[/]")
-    raw2 = Prompt.ask("  Your choice", default="all")
+    chosen_cats = questionary.checkbox(
+        "Which skill categories do you want?",
+        choices=cat_choices,
+        instruction="(Use Space to select, Enter to confirm)"
+    ).ask()
 
-    chosen_cats: list[str] = []
-    if raw2.strip().lower() in ("all", "a", ""):
-        chosen_cats = cats
-    else:
-        for part in raw2.split(","):
-            try:
-                idx = int(part.strip()) - 1
-                if 0 <= idx < len(cats):
-                    chosen_cats.append(cats[idx])
-            except ValueError:
-                pass
-
+    if chosen_cats is None:
+        sys.exit(0)
+    
     if not chosen_cats:
         chosen_cats = cats
 
