@@ -7,6 +7,13 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+## [2.0.1] — 2026-05-11
+
+### Fixed
+- **Permission Denied Error**: Resolved `[Errno 13] Permission denied` errors during `--update` by correctly ignoring `.git` directories when copying from cache to central store.
+- **Fast-forward Error**: Resolved `fatal: Cannot fast-forward to multiple branches` error by using explicit `git fetch` and `git reset --hard FETCH_HEAD` instead of `git pull --ff-only`.
+
+
 ## [2.0.0] — 2026-05-11
 
 ### Added

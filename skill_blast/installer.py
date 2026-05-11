@@ -52,7 +52,8 @@ def _clone(repo: str, dest: Path) -> tuple[bool, str]:
 
 
 def _pull(dest: Path) -> tuple[bool, str]:
-    return _run(["git", "pull", "--ff-only", "--quiet"], cwd=dest)
+    _run(["git", "fetch", "--depth=1", "origin", "HEAD", "--quiet"], cwd=dest)
+    return _run(["git", "reset", "--hard", "FETCH_HEAD", "--quiet"], cwd=dest)
 
 
 def ensure_repo(repo: str, update: bool = False) -> tuple[bool, str]:
@@ -215,13 +216,13 @@ def install_skill(
                 import shutil as _shutil
                 _shutil.copy2(skill_md, store_dest / "SKILL.md.bak")
             try:
-                shutil.copytree(src, store_dest, dirs_exist_ok=True)
+                shutil.copytree(src, store_dest, dirs_exist_ok=True, ignore=shutil.ignore_patterns(".git"))
             except Exception as e:
                 result["error"] = f"update failed: {e}"
                 return result
         elif not store_dest.exists():
             try:
-                shutil.copytree(src, store_dest)
+                shutil.copytree(src, store_dest, ignore=shutil.ignore_patterns(".git"))
             except Exception as e:
                 result["error"] = f"copy failed: {e}"
                 return result
