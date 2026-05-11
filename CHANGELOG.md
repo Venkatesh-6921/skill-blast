@@ -7,6 +7,12 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+## [2.1.2] — 2026-05-11
+
+### Fixed
+- **TUI Bugfix**: Resolved `BadIdentifier` error in the interactive list. The category `UI/Design` was causing an invalid widget ID because it contained a `/`. Tab IDs are now properly sanitized.
+
+
 ## [2.1.1] — 2026-05-11
 
 ### Fixed

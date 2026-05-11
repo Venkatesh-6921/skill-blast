@@ -47,8 +47,10 @@ class SkillBlastTUI(App):
         with TabbedContent():
             for category in categories:
                 category_skills = skills_by_category[category]
-                # Remove emojis for TabPane ID since it needs to be a valid CSS selector/ID
-                tab_id = category.replace(" ", "_").replace("📱", "").replace("⚙️", "").replace("🏥", "").replace("📈", "").replace("🎬", "").replace("🗂️", "").replace("🔬", "").replace("🎨", "").replace("✍️", "").strip()
+                # Proper sanitization for TabPane ID: only alphanumeric, underscore, or hyphen
+                import re
+                tab_id = re.sub(r"[^a-zA-Z0-9_-]", "_", category).lower()
+                
                 with TabPane(category, id=tab_id):
                     table = DataTable(zebra_stripes=True)
                     table.add_columns("ID", "Name", "Repo", "Description")
