@@ -104,6 +104,36 @@ def batch_update_repos(repos: list[str], max_workers: int = 4) -> dict[str, tupl
 
 # ── Skill installation ─────────────────────────────────────────────────────────
 
+# Candidate files to use as SKILL.md content, in priority order.
+_SKILL_CANDIDATES = [
+    "skill.md",        # lowercase variant (e.g. daydream)
+    "CLAUDE.md",       # many repos use this for Claude instructions
+    "AGENTS.md",       # multi-agent instruction files
+    "instructions.md", # generic instruction files
+    "README.md",       # fallback: repo readme
+]
+
+
+def _ensure_skill_md(skill_dir: Path) -> None:
+    """
+    If the skill directory lacks a SKILL.md, create one from the best
+    available candidate file so that Claude Code's /skills can discover it.
+    The original file is preserved; SKILL.md is a copy of its content.
+    """
+    skill_md = skill_dir / "SKILL.md"
+    if skill_md.exists():
+        return
+
+    for candidate in _SKILL_CANDIDATES:
+        source = skill_dir / candidate
+        if source.exists():
+            try:
+                skill_md.write_text(source.read_text(encoding="utf-8", errors="replace"))
+            except Exception:
+                pass  # non-critical — skill still works, just won't appear in /skills
+            return
+
+
 def _link_or_copy(src: Path, dest: Path) -> None:
     """Symlink on Linux/macOS; directory copy on Windows (no symlink privileges by default)."""
     dest.parent.mkdir(parents=True, exist_ok=True)
@@ -125,7 +155,8 @@ def install_skill(
     1. Ensure repo is in cache
     2. Resolve source directory (subpath or full repo)
     3. Copy to central store (~/.skill-blast/skills/<name>/)
-    4. Symlink/copy from each agent's skills dir
+    4. Ensure SKILL.md exists (auto-generate from best candidate)
+    5. Symlink/copy from each agent's skills dir
     Returns a result dict.
     """
     result: dict = {
@@ -168,7 +199,11 @@ def install_skill(
                 result["error"] = f"copy failed: {e}"
                 return result
 
-    # ── 4. Agent links ─────────────────────────────────────────────────────────
+    # ── 4. Ensure SKILL.md exists ──────────────────────────────────────────────
+    if not dry_run:
+        _ensure_skill_md(store_dest)
+
+    # ── 5. Agent links ─────────────────────────────────────────────────────────
     for agent_dir in agent_dirs:
         link = agent_dir / skill.name
         if not dry_run:
@@ -182,6 +217,7 @@ def install_skill(
                 result["already"].append(f"err({e})")
         else:
             result["linked"].append(agent_dir.parent.parent.name + "(dry)")
+
 
     result["ok"] = True
     return result
