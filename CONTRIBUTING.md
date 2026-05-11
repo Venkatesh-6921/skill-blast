@@ -80,6 +80,54 @@ pytest tests/ -v
 
 ---
 
+## Git workflow
+
+> **⚠️ Direct pushes to `main` are not allowed.** All changes go through pull requests.
+
+### For every change — no matter how small:
+
+```bash
+# 1. Create a branch from latest main
+git checkout main && git pull
+git checkout -b fix/short-description     # or feat/, docs/, refactor/
+
+# 2. Make your changes, then test locally
+pytest tests/ -v
+SKILLBLAST_NO_TUI=1 skill-blast --list    # smoke test
+
+# 3. Commit
+git add -A
+git commit -m "fix: what you changed and why"
+
+# 4. Push your branch (never main)
+git push origin fix/short-description
+
+# 5. Open a Pull Request
+gh pr create --title "fix: short description" --body "Explain the change"
+# or go to github.com/Venkatesh-6921/skill-blast and click "Compare & pull request"
+```
+
+### Branch naming
+
+| Prefix | Use for |
+|---|---|
+| `fix/` | Bug fixes |
+| `feat/` | New features or skills |
+| `docs/` | Documentation only |
+| `refactor/` | Code restructuring (no behavior change) |
+
+### Releases (maintainers only)
+
+Version bumps and PyPI releases happen on `main` after PRs are merged:
+
+```bash
+# After merging a PR, on main:
+git tag v2.x.x
+git push origin main --tags    # triggers PyPI publish via CI
+```
+
+---
+
 ## Development setup
 
 ```bash
@@ -95,7 +143,7 @@ pip install -e ".[dev]"
 ## Code style
 
 - Python 3.9+ compatible
-- No external dependencies beyond `rich`
+- Dependencies: `rich`, `textual`, `questionary` — keep it minimal
 - Keep `installer.py` pure — no UI code there
 - All new platform logic goes in `agents.py`
 
