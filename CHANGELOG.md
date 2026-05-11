@@ -7,6 +7,15 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+## [2.0.0] — 2026-05-11
+
+### Added
+- **Frontmatter Auto-Injector**: Solved Claude Code ignoring 24 skills by auto-generating YAML frontmatter dynamically. All 50 skills are now visible in Claude Code.
+- **Interactive Terminal UI**: Added a sleek, interactive multi-select TUI powered by `questionary` when running without flags.
+- **Custom Skill Adder**: Added `--add <github-repo>` flag so users can inject arbitrary GitHub repositories into their local skill-blast database persistently.
+- **Update with Safe Backup**: `--update` now properly pulls the newest branch and writes a `SKILL.md.bak` file before overwriting, protecting local user tweaks.
+
+
 ## [1.1.1] — 2026-05-11
 
 ### Fixed

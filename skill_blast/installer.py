@@ -208,9 +208,19 @@ def install_skill(
     # ── 3. Central store ───────────────────────────────────────────────────────
     store_dest = STORE_DIR / skill.name
     if not dry_run:
-        if not store_dest.exists():
+        STORE_DIR.mkdir(parents=True, exist_ok=True)
+        if update and store_dest.exists():
+            skill_md = store_dest / "SKILL.md"
+            if skill_md.exists():
+                import shutil as _shutil
+                _shutil.copy2(skill_md, store_dest / "SKILL.md.bak")
             try:
-                STORE_DIR.mkdir(parents=True, exist_ok=True)
+                shutil.copytree(src, store_dest, dirs_exist_ok=True)
+            except Exception as e:
+                result["error"] = f"update failed: {e}"
+                return result
+        elif not store_dest.exists():
+            try:
                 shutil.copytree(src, store_dest)
             except Exception as e:
                 result["error"] = f"copy failed: {e}"

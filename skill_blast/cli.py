@@ -590,7 +590,7 @@ Examples:
         )
 
     # ── Install ────────────────────────────────────────────────────────────────
-    results = run_install(skills, agent_dirs, dry_run=dry_run, update=False if args.update else False)
+    results = run_install(skills, agent_dirs, dry_run=dry_run, update=args.update)
 
     # ── Summary ────────────────────────────────────────────────────────────────
     print_summary(results, chosen_agent_keys)
