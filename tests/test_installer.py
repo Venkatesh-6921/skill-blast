@@ -129,6 +129,10 @@ class TestInstallSkill:
 # ── Uninstall skill ───────────────────────────────────────────────────────────
 
 class TestUninstallSkill:
+    @pytest.mark.skipif(
+        platform.system() == "Windows",
+        reason="symlinks require Developer Mode on Windows — CI runners don't have it",
+    )
     def test_uninstall_removes_links(self, sample_skill, mock_agent_dirs, tmp_path):
         # Pre-create symlinks/dirs
         store = tmp_path / "store"
@@ -171,6 +175,10 @@ class TestHealthCheck:
             assert report["stored_skills"] == 0
             assert report["broken_links"] == []
 
+    @pytest.mark.skipif(
+        platform.system() == "Windows",
+        reason="symlinks require Developer Mode on Windows — CI runners don't have it",
+    )
     def test_detects_broken_symlinks(self, mock_agent_dirs, tmp_path):
         # Create a broken symlink
         broken = mock_agent_dirs[0] / "dead-skill"

@@ -24,6 +24,15 @@ from .installer import (check_git, install_skill, uninstall_skill,
 from .skills import (ALL_SKILLS, CATEGORIES, CATEGORY_COLORS,
                      CATEGORY_ICONS, Skill, SKILLS_BY_ID)
 
+# Fix Unicode output on Windows (box-drawing chars + emoji in BANNER/agents).
+# Without this, CP1252/CP437 terminals raise UnicodeEncodeError on first print.
+if sys.platform == "win32":
+    try:
+        sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+        sys.stderr.reconfigure(encoding="utf-8", errors="replace")
+    except AttributeError:
+        pass  # reconfigure not available on some legacy Python builds
+
 console = Console()
 
 
