@@ -7,6 +7,13 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+## [2.1.0] — 2026-05-11
+
+### Added
+- **Interactive TUI for `--list`**: Replaced the static list output with a full-screen interactive TUI built with `Textual`. Use `Tab` or mouse clicks to switch between category tabs, and arrow keys to scroll through skills.
+- **New Dependency**: Added `textual>=0.80.0` for the interactive terminal interface.
+
+
 ## [2.0.3] — 2026-05-11
 
 ### Changed

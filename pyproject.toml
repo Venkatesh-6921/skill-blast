@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "skill-blast"
-version = "2.0.3"
+version = "2.1.0"
 description = "One-click installer for 50 top AI agent skills — Claude Code, OpenCode, Antigravity, Cursor and more"
 readme = "README.md"
 license = { text = "MIT" }
@@ -26,7 +26,7 @@ classifiers = [
     "Topic :: Utilities",
 ]
 requires-python = ">=3.9"
-dependencies = ["rich>=13.0.0", "questionary>=2.0.0"]
+dependencies = ["rich>=13.0.0", "questionary>=2.0.0", "textual>=0.80.0"]
 
 [project.optional-dependencies]
 dev = [
