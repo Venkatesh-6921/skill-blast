@@ -1,3 +1,5 @@
+import os
+import re
 from collections import defaultdict
 
 from textual.app import App, ComposeResult
@@ -5,6 +7,7 @@ from textual.widgets import Header, Footer, TabbedContent, TabPane, DataTable
 from rich.text import Text
 
 from .skills import ALL_SKILLS, CATEGORIES
+
 
 class SkillBlastTUI(App):
     """Interactive TUI for browsing skill-blast skills."""
@@ -14,50 +17,67 @@ class SkillBlastTUI(App):
 
     BINDINGS = [
         ("q", "quit", "Quit"),
-        ("tab", "app.focus_next", "Next Focus"),
-        ("shift+tab", "app.focus_previous", "Prev Focus"),
     ]
 
     CSS = """
+    Screen {
+        layout: vertical;
+    }
     TabbedContent {
-        height: 100%;
+        height: 1fr;
+    }
+    ContentSwitcher {
+        height: 1fr;
+    }
+    TabPane {
+        height: 1fr;
+        padding: 0;
     }
     DataTable {
-        height: 100%;
+        height: 1fr;
     }
     """
 
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        filter_str = os.environ.get("SKILLBLAST_TUI_FILTER")
+        self._filters = filter_str.split(",") if filter_str else []
+
+        self._skills_by_cat: dict[str, list] = defaultdict(list)
+        for s in ALL_SKILLS:
+            if self._filters and s.category not in self._filters:
+                continue
+            self._skills_by_cat[s.category].append(s)
+
+        self._categories = [c for c in CATEGORIES if c in self._skills_by_cat]
+        if not self._categories and self._skills_by_cat:
+            self._categories = sorted(self._skills_by_cat.keys())
+
+    def _safe_id(self, category: str) -> str:
+        """Generate a valid CSS/Textual widget identifier from a category name."""
+        return re.sub(r"[^a-zA-Z0-9_-]", "_", category).lower()
+
     def compose(self) -> ComposeResult:
         yield Header()
-        
-        import os
-        filter_str = os.environ.get("SKILLBLAST_TUI_FILTER")
-        filters = filter_str.split(",") if filter_str else []
-
-        skills_by_category = defaultdict(list)
-        for s in ALL_SKILLS:
-            if filters and s.category not in filters:
-                continue
-            skills_by_category[s.category].append(s)
-            
-        categories = [c for c in CATEGORIES if c in skills_by_category]
-        if not categories:
-            categories = list(skills_by_category.keys())
-
         with TabbedContent():
-            for category in categories:
-                category_skills = skills_by_category[category]
-                # Proper sanitization for TabPane ID: only alphanumeric, underscore, or hyphen
-                import re
-                tab_id = re.sub(r"[^a-zA-Z0-9_-]", "_", category).lower()
-                
-                with TabPane(category, id=tab_id):
-                    table = DataTable(zebra_stripes=True)
-                    table.add_columns("ID", "Name", "Repo", "Description")
-                    for s in category_skills:
-                        name_text = Text(s.name, style="bold")
-                        repo_text = Text(s.repo, style="dim cyan")
-                        table.add_row(str(s.id), name_text, repo_text, s.desc)
-                    yield table
-
+            for cat in self._categories:
+                safe = self._safe_id(cat)
+                with TabPane(cat, id=f"pane-{safe}"):
+                    yield DataTable(id=f"dt-{safe}", zebra_stripes=True)
         yield Footer()
+
+    def on_mount(self) -> None:
+        """Populate every DataTable after the widget tree is fully mounted."""
+        for cat in self._categories:
+            safe = self._safe_id(cat)
+            table = self.query_one(f"#dt-{safe}", DataTable)
+            table.cursor_type = "row"
+            table.add_columns("ID", "Name", "Repo", "Description")
+            for s in self._skills_by_cat[cat]:
+                table.add_row(
+                    str(s.id),
+                    Text(s.name, style="bold cyan"),
+                    Text(s.repo, style="dim"),
+                    s.desc,
+                )
+
