@@ -7,6 +7,16 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+## [1.1.0] — 2026-05-11
+
+### Added
+- Concurrent multi-threaded skill installation (8 threads) — ~5x faster downloads.
+- Dynamic `M/N` progress counter (e.g. `21/50`) during install and uninstall.
+
+### Changed
+- Thread-safe `FAILED_REPOS` tracking with `threading.Lock` in installer module.
+
+
 ## [1.0.1] — 2026-05-11
 
 ### Fixed

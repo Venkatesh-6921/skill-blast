@@ -5,14 +5,16 @@ skill-blast CLI — works for both developers (flags) and non-developers (wizard
 from __future__ import annotations
 
 import argparse
+import concurrent.futures
 import sys
 import platform
 from pathlib import Path
 
 from rich.console import Console
 from rich.panel import Panel
-from rich.progress import (BarColumn, Progress, SpinnerColumn,
-                           TaskProgressColumn, TextColumn, TimeElapsedColumn)
+from rich.progress import (BarColumn, MofNCompleteColumn, Progress,
+                           SpinnerColumn, TaskProgressColumn, TextColumn,
+                           TimeElapsedColumn)
 from rich.prompt import Confirm, Prompt
 from rich.table import Table
 from rich.text import Text
@@ -237,8 +239,9 @@ def run_uninstall(
 
     with Progress(
         SpinnerColumn(),
-        TextColumn("[progress.description]{task.description:<60}"),
+        TextColumn("[progress.description]{task.description:<40}"),
         BarColumn(),
+        MofNCompleteColumn(),
         TaskProgressColumn(),
         TimeElapsedColumn(),
         console=console,
@@ -246,28 +249,40 @@ def run_uninstall(
     ) as progress:
         task = progress.add_task("[red]Uninstalling…", total=len(skills))
 
-        for skill in skills:
-            color = CATEGORY_COLORS.get(skill.category, "white")
-            progress.update(
-                task,
-                description=(
-                    f"[{color}]{CATEGORY_ICONS.get(skill.category, '•')} {skill.category:10}[/] "
-                    f"[bold]{skill.name}[/]"
-                ),
-            )
-            result = uninstall_skill(skill, agent_dirs)
-            results.append(result)
+        def _uninstall_one(skill: Skill) -> dict:
+            return uninstall_skill(skill, agent_dirs)
 
-            if result["ok"]:
-                removed = ", ".join(result["removed"])
-                console.log(
-                    f"  [green]✓[/] [bold]{skill.name}[/] removed"
-                    + (f"  ← {removed}" if removed else " (not installed)")
+        with concurrent.futures.ThreadPoolExecutor(max_workers=8) as executor:
+            future_to_skill = {
+                executor.submit(_uninstall_one, s): s for s in skills
+            }
+            for future in concurrent.futures.as_completed(future_to_skill):
+                skill = future_to_skill[future]
+                color = CATEGORY_COLORS.get(skill.category, "white")
+                progress.update(
+                    task,
+                    description=(
+                        f"[{color}]{CATEGORY_ICONS.get(skill.category, '•')} {skill.category:10}[/] "
+                        f"[bold]{skill.name}[/]"
+                    ),
                 )
-            else:
-                console.log(f"  [red]✗[/] [bold]{skill.name}[/]  [red]{result['error']}[/]")
+                try:
+                    result = future.result()
+                except Exception as exc:
+                    result = {"skill": skill, "ok": False, "removed": [], "not_found": [], "error": str(exc)}
 
-            progress.advance(task)
+                results.append(result)
+
+                if result["ok"]:
+                    removed = ", ".join(result["removed"])
+                    console.log(
+                        f"  [green]✓[/] [bold]{skill.name}[/] removed"
+                        + (f"  ← {removed}" if removed else " (not installed)")
+                    )
+                else:
+                    console.log(f"  [red]✗[/] [bold]{skill.name}[/]  [red]{result['error']}[/]")
+
+                progress.advance(task)
 
     return results
 
@@ -338,8 +353,9 @@ def run_install(
 
     with Progress(
         SpinnerColumn(),
-        TextColumn("[progress.description]{task.description:<60}"),
+        TextColumn("[progress.description]{task.description:<40}"),
         BarColumn(),
+        MofNCompleteColumn(),
         TaskProgressColumn(),
         TimeElapsedColumn(),
         console=console,
@@ -347,30 +363,42 @@ def run_install(
     ) as progress:
         task = progress.add_task("[cyan]Installing…", total=len(skills))
 
-        for skill in skills:
-            color = CATEGORY_COLORS.get(skill.category, "white")
-            progress.update(
-                task,
-                description=(
-                    f"[{color}]{CATEGORY_ICONS.get(skill.category, '•')} {skill.category:10}[/] "
-                    f"[bold]{skill.name}[/]"
-                ),
-            )
-            result = install_skill(skill, agent_dirs, dry_run=dry_run, update=update)
-            results.append(result)
+        def _install_one(skill: Skill) -> dict:
+            return install_skill(skill, agent_dirs, dry_run=dry_run, update=update)
 
-            if result["ok"]:
-                msg = result["repo_msg"]
-                linked = ", ".join(result["linked"])
-                console.log(
-                    f"  [green]✓[/] [bold]{skill.name}[/] "
-                    f"[dim]({msg})[/]"
-                    + (f"  → {linked}" if linked else "")
+        with concurrent.futures.ThreadPoolExecutor(max_workers=8) as executor:
+            future_to_skill = {
+                executor.submit(_install_one, s): s for s in skills
+            }
+            for future in concurrent.futures.as_completed(future_to_skill):
+                skill = future_to_skill[future]
+                color = CATEGORY_COLORS.get(skill.category, "white")
+                progress.update(
+                    task,
+                    description=(
+                        f"[{color}]{CATEGORY_ICONS.get(skill.category, '•')} {skill.category:10}[/] "
+                        f"[bold]{skill.name}[/]"
+                    ),
                 )
-            else:
-                console.log(f"  [red]✗[/] [bold]{skill.name}[/]  [red]{result['error']}[/]")
+                try:
+                    result = future.result()
+                except Exception as exc:
+                    result = {"skill": skill, "ok": False, "repo_msg": "", "linked": [], "already": [], "error": str(exc)}
 
-            progress.advance(task)
+                results.append(result)
+
+                if result["ok"]:
+                    msg = result["repo_msg"]
+                    linked = ", ".join(result["linked"])
+                    console.log(
+                        f"  [green]✓[/] [bold]{skill.name}[/] "
+                        f"[dim]({msg})[/]"
+                        + (f"  → {linked}" if linked else "")
+                    )
+                else:
+                    console.log(f"  [red]✗[/] [bold]{skill.name}[/]  [red]{result['error']}[/]")
+
+                progress.advance(task)
 
     return results
 

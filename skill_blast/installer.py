@@ -9,6 +9,7 @@ import os
 import platform
 import shutil
 import subprocess
+import threading
 from pathlib import Path
 from typing import Optional
 
@@ -21,6 +22,7 @@ CACHE_DIR = HOME / ".skill-blast" / "cache"
 STORE_DIR = HOME / ".skill-blast" / "skills"
 
 FAILED_REPOS: set[str] = set()   # repos that failed this session — skip retries
+_FAILED_LOCK = threading.Lock()  # protects FAILED_REPOS in concurrent installs
 
 
 # ── Git helpers ────────────────────────────────────────────────────────────────
@@ -55,8 +57,9 @@ def _pull(dest: Path) -> tuple[bool, str]:
 
 def ensure_repo(repo: str, update: bool = False) -> tuple[bool, str]:
     """Clone repo if missing; optionally pull if it exists. Returns (ok, message)."""
-    if repo in FAILED_REPOS:
-        return False, "skipped (failed earlier)"
+    with _FAILED_LOCK:
+        if repo in FAILED_REPOS:
+            return False, "skipped (failed earlier)"
 
     dest = CACHE_DIR / repo.replace("/", "__")
 
@@ -64,14 +67,16 @@ def ensure_repo(repo: str, update: bool = False) -> tuple[bool, str]:
         if update:
             ok, msg = _pull(dest)
             if not ok:
-                FAILED_REPOS.add(repo)
+                with _FAILED_LOCK:
+                    FAILED_REPOS.add(repo)
             return ok, f"updated — {msg}"
         return True, "cached"
 
     dest.parent.mkdir(parents=True, exist_ok=True)
     ok, msg = _clone(repo, dest)
     if not ok:
-        FAILED_REPOS.add(repo)
+        with _FAILED_LOCK:
+            FAILED_REPOS.add(repo)
     return ok, msg
 
 
