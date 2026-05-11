@@ -7,6 +7,13 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+## [1.0.1] — 2026-05-11
+
+### Fixed
+- Fixed `UnicodeEncodeError` crashes on Windows by enforcing `utf-8` on stdout/stderr.
+- Fixed integration test crashes on Windows CI by forcing `utf-8` decoding in subprocesses.
+- Skipped symlink creation tests on Windows CI runners missing Developer Mode.
+- Updated `actions/checkout` to v5 and `actions/setup-python` to v6 in CI pipelines.
 ### Added
 - `--uninstall` flag to remove installed skills from agent directories
 - `--check` flag for health diagnostics (broken symlinks, cache/store status, git connectivity)
