@@ -7,6 +7,25 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+## [2.2.0] — 2026-05-13
+
+### Added
+
+- **GitHub-based skill installation**: New `--github-install <ID>` flag installs skills directly from GitHub with full instruction parsing and sub-agent detection.
+- **Multi-agent support**: Skills are automatically installed to all supported AI agent CLIs based on instruction files (SKILL.md, CLAUDE.md, AGENTS.md) found in the original repository.
+- **Intelligent sub-agent parsing**: When a skill bundles or depends on sub-agents, they are automatically identified and installed alongside the parent skill.
+- **Local install registry**: All installations/uninstalls are now tracked in `~/.skill-blast/registry.json` with timestamps and agent info.
+- **Install status command**: New `--status` flag shows all installed skills from the local registry with agent and timestamp details.
+- **Offline skill catalog**: All 50 skills bundled as `skill_blast/data/skills.json` for instant browsing without network access.
+- **42 new tests**: Comprehensive test coverage for GitHub installation, sub-agent parsing, multi-agent distribution, registry tracking, offline mode, and backward compatibility (81 total tests, 0 failures).
+
+### New Files
+
+- `skill_blast/github_installer.py` — GitHub-based installer with instruction parsing
+- `skill_blast/registry.py` — Local install/uninstall tracking
+- `skill_blast/data/skills.json` — Bundled offline skill metadata
+- `tests/test_github_installer.py` — 42 new tests
+
 ## [2.1.3] — 2026-05-11
 
 ### Fixed

@@ -156,6 +156,15 @@ skill-blast --list --only Marketing
 
 # Install to all agents even if not detected
 skill-blast --force-agents
+
+# Install specific skills by ID from GitHub (with sub-agent & multi-agent support)
+skill-blast --github-install 1 41
+
+# Install from GitHub to specific agents only
+skill-blast --github-install 2 --agents claude-code opencode
+
+# View installed skills from the local registry
+skill-blast --status
 ```
 
 ---
@@ -272,6 +281,12 @@ skill-blast --check
 
 # Show detailed metadata about a specific skill
 skill-blast --info 1
+
+# View all installed skills with agent and timestamp info
+skill-blast --status
+
+# Install a specific skill by ID from GitHub (auto-detects agents + sub-agents)
+skill-blast --github-install 1
 ```
 
 ---
