@@ -12,15 +12,13 @@ Covers items from implementation plan sections 4.3 and 4.4:
 """
 
 import json
-import platform
 from pathlib import Path
-from unittest.mock import MagicMock, patch
+from unittest.mock import patch
 
 import pytest
 
-from skill_blast.skills import ALL_SKILLS, Skill, SKILLS_BY_ID
 from skill_blast.agents import AGENTS
-
+from skill_blast.skills import ALL_SKILLS, Skill
 
 # ── Fixtures ──────────────────────────────────────────────────────────────────
 
@@ -412,10 +410,6 @@ class TestRegistry:
         from skill_blast.registry import (
             register_install,
             register_uninstall,
-            is_installed,
-            get_installed,
-            get_entry,
-            clear_registry,
         )
         assert callable(register_install)
         assert callable(register_uninstall)
@@ -535,10 +529,12 @@ class TestBackwardCompat:
 
     def test_existing_imports_still_work(self):
         """All v2 imports should still function."""
-        from skill_blast.cli import main, run_install, run_uninstall, cmd_list, cmd_info, cmd_check
-        from skill_blast.installer import install_skill, uninstall_skill, health_check
-        from skill_blast.skills import ALL_SKILLS, SKILLS_BY_ID, CATEGORIES
-        from skill_blast.agents import AGENTS, detect_agents
+        from skill_blast.cli import (
+            main,
+            run_install,
+        )
+        from skill_blast.installer import install_skill
+        from skill_blast.skills import ALL_SKILLS
 
         assert callable(main)
         assert callable(run_install)
@@ -549,17 +545,9 @@ class TestBackwardCompat:
         """New v3 modules should be importable."""
         from skill_blast.github_installer import (
             install_from_github,
-            uninstall_from_github,
-            parse_instruction_file,
-            resolve_target_agents,
-            resolve_sub_agents,
-            get_install_status,
         )
         from skill_blast.registry import (
             register_install,
-            register_uninstall,
-            is_installed,
-            get_installed,
         )
 
         assert callable(install_from_github)

@@ -3,10 +3,11 @@ All 50 top AI agent skills with metadata.
 Source: 50 Best Claude Code Skills (community-curated list).
 """
 
-from dataclasses import dataclass
-from typing import Optional
+import contextlib
 import json
+from dataclasses import dataclass
 from pathlib import Path
+from typing import Optional
 
 
 @dataclass
@@ -52,12 +53,22 @@ CATEGORY_ICONS = {
     "Health":      "🏥",
 }
 
-ALL_SKILLS: list[Skill] = [
+ALL_SKILLS: list[Skill] = []
 
-    # ── UI / Design ────────────────────────────────────────────────────────────
-    Skill(1,  "frontend-design",     "anthropics/skills",                    "skills/frontend-design",
-          "Most popular skill ever — bans Inter font + purple gradients, forces bold aesthetics",
-          "UI/Design", ["ui", "design", "react", "css"]),
+# ── Load bundled skills (Offline-First) ────────────────────────────────────────
+_BUNDLED_SKILLS = Path(__file__).parent / "data" / "skills.json"
+if _BUNDLED_SKILLS.exists():
+    with contextlib.suppress(Exception):
+        _data = json.loads(_BUNDLED_SKILLS.read_text(encoding="utf-8"))
+        ALL_SKILLS = [Skill(**s) for s in _data]
+
+# ── Fallback (Hardcoded list) ──────────────────────────────────────────────────
+if not ALL_SKILLS:
+    ALL_SKILLS = [
+        # ── UI / Design ────────────────────────────────────────────────────────────
+        Skill(1,  "frontend-design",     "anthropics/skills",                    "skills/frontend-design",
+              "Most popular skill ever — bans Inter font + purple gradients, forces bold aesthetics",
+              "UI/Design", ["ui", "design", "react", "css"]),
 
     Skill(21, "canvas-design",       "anthropics/skills",                    "skills/canvas-design",
           "Beautiful visual art in PNG and PDF with proper aesthetic principles",
@@ -280,7 +291,7 @@ CATEGORIES: list[str] = sorted(set(s.category for s in ALL_SKILLS))
 def add_custom_skill(repo: str, category: str = "Custom", desc: str = "Custom user-added skill") -> Skill:
     name = repo.split("/")[-1]
     new_id = max(s.id for s in ALL_SKILLS) + 1 if ALL_SKILLS else 1
-    
+
     skill = Skill(
         id=new_id,
         name=name,
@@ -290,14 +301,12 @@ def add_custom_skill(repo: str, category: str = "Custom", desc: str = "Custom us
         category=category,
         tags=["custom"]
     )
-    
+
     custom = []
     if _CUSTOM_SKILLS_FILE.exists():
-        try:
+        with contextlib.suppress(Exception):
             custom = json.loads(_CUSTOM_SKILLS_FILE.read_text(encoding="utf-8"))
-        except Exception:
-            pass
-            
+
     custom.append({
         "id": skill.id,
         "name": skill.name,
@@ -307,14 +316,14 @@ def add_custom_skill(repo: str, category: str = "Custom", desc: str = "Custom us
         "category": skill.category,
         "tags": skill.tags
     })
-    
+
     _CUSTOM_SKILLS_FILE.parent.mkdir(parents=True, exist_ok=True)
     _CUSTOM_SKILLS_FILE.write_text(json.dumps(custom, indent=2), encoding="utf-8")
-    
+
     ALL_SKILLS.append(skill)
     SKILLS_BY_ID[skill.id] = skill
     if skill.category not in CATEGORIES:
         CATEGORIES.append(skill.category)
         CATEGORIES.sort()
-        
+
     return skill

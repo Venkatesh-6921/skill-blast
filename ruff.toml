@@ -1,0 +1,19 @@
+[lint]
+select = [
+    "E",    # pycodestyle errors
+    "F",    # pyflakes
+    "W",    # pycodestyle warnings
+    "I",    # isort
+    "UP",   # pyupgrade
+    "B",    # flake8-bugbear
+    "SIM",  # flake8-simplify
+]
+ignore = [
+    "E501",   # line too long — handled by formatter
+    "B008",   # function-call-in-default-argument (used by argparse)
+    "SIM108", # ternary operator — readability preference
+    "UP007",  # X | Y union syntax — need 3.9 compat
+]
+
+[lint.per-file-ignores]
+"tests/*" = ["B", "SIM"]

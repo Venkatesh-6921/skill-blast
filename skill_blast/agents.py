@@ -7,7 +7,6 @@ import os
 import platform
 import shutil
 from pathlib import Path
-from typing import Callable
 
 HOME = Path.home()
 IS_WINDOWS = platform.system() == "Windows"

@@ -5,7 +5,7 @@ Core installation logic.
 - Symlink (or copy on Windows) into each agent's skills directory
 """
 
-import os
+import logging
 import platform
 import shutil
 import subprocess
@@ -14,8 +14,10 @@ from collections import defaultdict
 from pathlib import Path
 from typing import Optional
 
-from .skills import Skill
 from .registry import register_install, register_uninstall
+from .skills import Skill
+
+logger = logging.getLogger("skill_blast")
 
 HOME = Path.home()
 IS_WINDOWS = platform.system() == "Windows"
@@ -26,6 +28,9 @@ STORE_DIR = HOME / ".skill-blast" / "skills"
 FAILED_REPOS: set[str] = set()   # repos that failed this session — skip retries
 _FAILED_LOCK = threading.Lock()  # protects FAILED_REPOS in concurrent installs
 UPDATED_REPOS: set[str] = set()
+# NOTE: _REPO_LOCKS grows one entry per unique repo string for the process
+# lifetime.  This is harmless for a CLI (short-lived process) and avoids
+# the complexity of a bounded LRU lock pool.
 _REPO_LOCKS = defaultdict(threading.Lock)
 
 
@@ -131,15 +136,15 @@ def _ensure_skill_md(skill_dir: Path, skill: Skill) -> None:
     The original file is preserved; SKILL.md is a copy of its content.
     """
     skill_md = skill_dir / "SKILL.md"
-    
+
     if not skill_md.exists():
         for candidate in _SKILL_CANDIDATES:
             source = skill_dir / candidate
             if source.exists():
                 try:
                     skill_md.write_text(source.read_text(encoding="utf-8", errors="replace"))
-                except Exception:
-                    pass  # non-critical — skill still works, just won't appear in /skills
+                except Exception as e:
+                    logger.debug("SKILL.md generation failed for %s: %s", skill_dir, e)
                 break
 
     _ensure_frontmatter(skill_md, skill)
@@ -151,14 +156,14 @@ def _ensure_frontmatter(skill_md: Path, skill: Skill) -> None:
     """
     if not skill_md.exists():
         return
-        
+
     try:
         content = skill_md.read_text(encoding="utf-8", errors="replace")
         if not content.strip().startswith("---"):
             frontmatter = f"---\nname: {skill.name}\ndescription: {skill.desc}\n---\n\n"
             skill_md.write_text(frontmatter + content, encoding="utf-8")
-    except Exception:
-        pass
+    except Exception as e:
+        logger.debug("Frontmatter injection failed for %s: %s", skill_md, e)
 
 
 def _link_or_copy(src: Path, dest: Path) -> None:

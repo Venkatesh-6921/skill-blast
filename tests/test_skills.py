@@ -1,8 +1,7 @@
 """Basic sanity tests — no git required, no network calls."""
 
-import pytest
-from skill_blast.skills import ALL_SKILLS, SKILLS_BY_ID, CATEGORIES, CATEGORY_COLORS
 from skill_blast.agents import AGENTS
+from skill_blast.skills import ALL_SKILLS, CATEGORIES, CATEGORY_COLORS, SKILLS_BY_ID
 
 
 class TestSkillData:
@@ -67,7 +66,7 @@ class TestCLIImport:
         assert callable(main)
 
     def test_installer_importable(self):
-        from skill_blast.installer import install_skill, ensure_repo, check_git
+        from skill_blast.installer import check_git, ensure_repo, install_skill
         assert callable(install_skill)
         assert callable(ensure_repo)
         assert callable(check_git)

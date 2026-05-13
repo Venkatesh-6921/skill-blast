@@ -64,9 +64,22 @@ if %ERRORLEVEL% NEQ 0 (
 )
 for /f "tokens=*" %%i in ('git --version') do echo  [OK] %%i
 
-:: ── pip install ────────────────────────────────────────────────
+:: ── Install ──────────────────────────────────────────────────────
 echo.
 echo  Installing skill-blast...
+
+:: Prefer uv if available
+uv --version >nul 2>&1
+if %ERRORLEVEL% EQU 0 (
+    echo  [OK] Found uv, using it for installation...
+    uv pip install --upgrade skill-blast
+    if %ERRORLEVEL% EQU 0 (
+        echo  [OK] skill-blast installed via uv!
+        goto :installed
+    )
+    echo  [WARN] uv install failed, falling back to pip...
+)
+
 %PYTHON% -m pip install --quiet --upgrade skill-blast
 if %ERRORLEVEL% NEQ 0 (
     echo  Trying user install...
@@ -79,7 +92,9 @@ if %ERRORLEVEL% NEQ 0 (
         exit /b 1
     )
 )
-echo  [OK] skill-blast installed!
+echo  [OK] skill-blast installed via pip!
+
+:installed
 
 :: ── Run ────────────────────────────────────────────────────────
 echo.

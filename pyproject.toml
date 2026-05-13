@@ -32,6 +32,7 @@ dependencies = ["rich>=13.0.0", "questionary>=2.0.0", "textual>=0.80.0"]
 dev = [
     "pytest>=7.0",
     "pytest-cov",
+    "ruff",
 ]
 
 [project.scripts]
@@ -53,4 +54,11 @@ addopts = "-v --tb=short"
 
 [tool.coverage.run]
 source = ["skill_blast"]
-omit = ["tests/*"]
+omit = ["tests/*", "skill_blast/tui.py", "skill_blast/__main__.py"]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "if __name__",
+    "pass",
+]

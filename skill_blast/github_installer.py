@@ -10,16 +10,13 @@ directly from there via the CLI. This module handles:
 4. Installing skills into all supported AI agent CLIs automatically
 """
 
-import json
 import re
-import subprocess
 from pathlib import Path
 from typing import Optional
 
-from .skills import Skill, ALL_SKILLS, SKILLS_BY_ID
 from .agents import AGENTS, detect_agents
 from .registry import register_install, register_uninstall
-
+from .skills import ALL_SKILLS, Skill
 
 # ── Constants ──────────────────────────────────────────────────────────────────
 
@@ -238,7 +235,7 @@ def install_from_github(
 
     Returns a result dict with status info.
     """
-    from .installer import install_skill, ensure_repo, CACHE_DIR
+    from .installer import CACHE_DIR, ensure_repo, install_skill
 
     result = {
         "skill": skill,
