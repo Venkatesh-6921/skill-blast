@@ -1,0 +1,654 @@
+[
+  {
+    "id": 1,
+    "name": "frontend-design",
+    "repo": "anthropics/skills",
+    "subpath": "skills/frontend-design",
+    "desc": "Most popular skill ever \u2014 bans Inter font + purple gradients, forces bold aesthetics",
+    "category": "UI/Design",
+    "tags": [
+      "ui",
+      "design",
+      "react",
+      "css"
+    ]
+  },
+  {
+    "id": 21,
+    "name": "canvas-design",
+    "repo": "anthropics/skills",
+    "subpath": "skills/canvas-design",
+    "desc": "Beautiful visual art in PNG and PDF with proper aesthetic principles",
+    "category": "UI/Design",
+    "tags": [
+      "design",
+      "art",
+      "pdf"
+    ]
+  },
+  {
+    "id": 22,
+    "name": "algorithmic-art",
+    "repo": "anthropics/skills",
+    "subpath": "skills/algorithmic-art",
+    "desc": "Generative art with p5.js \u2014 seeded randomness, flow fields, particle systems",
+    "category": "UI/Design",
+    "tags": [
+      "art",
+      "generative",
+      "p5js"
+    ]
+  },
+  {
+    "id": 19,
+    "name": "nothing-design",
+    "repo": "dominikmartn/nothing-design-skill",
+    "subpath": "nothing-design",
+    "desc": "Generates UI in Nothing Phone's design language \u2014 monochrome, typographic, industrial",
+    "category": "UI/Design",
+    "tags": [
+      "ui",
+      "design",
+      "minimalist"
+    ]
+  },
+  {
+    "id": 18,
+    "name": "3d-motion-design",
+    "repo": "freshtechbro/claudedesignskills",
+    "subpath": null,
+    "desc": "27 plugins: Three.js, GSAP, React Three Fiber, Framer Motion, Babylon.js, A-Frame",
+    "category": "UI/Design",
+    "tags": [
+      "3d",
+      "animation",
+      "threejs",
+      "gsap"
+    ]
+  },
+  {
+    "id": 16,
+    "name": "color-expert",
+    "repo": "meodai/skill.color-expert",
+    "subpath": null,
+    "desc": "286,000 words of color science \u2014 OKLCH/OKLAB, palette generation, WCAG contrast",
+    "category": "UI/Design",
+    "tags": [
+      "color",
+      "design",
+      "accessibility"
+    ]
+  },
+  {
+    "id": 17,
+    "name": "hand-drawn-diagrams",
+    "repo": "muthuishere/hand-drawn-diagrams",
+    "subpath": null,
+    "desc": "Generates hand-drawn Excalidraw diagrams from a prompt \u2014 animated SVG, PNG export",
+    "category": "UI/Design",
+    "tags": [
+      "diagrams",
+      "excalidraw",
+      "svg"
+    ]
+  },
+  {
+    "id": 23,
+    "name": "design-auditor",
+    "repo": "Ashutos1997/claude-design-auditor-skill",
+    "subpath": null,
+    "desc": "Audits designs against 17 professional rules: typography, WCAG, spacing \u2014 scores /100",
+    "category": "UI/Design",
+    "tags": [
+      "audit",
+      "wcag",
+      "typography"
+    ]
+  },
+  {
+    "id": 20,
+    "name": "gpt-image-2",
+    "repo": "glebis/claude-skills",
+    "subpath": "gpt-image-2",
+    "desc": "First image model with built-in reasoning \u2014 14 style presets, 8 platform presets",
+    "category": "UI/Design",
+    "tags": [
+      "image",
+      "ai",
+      "generation"
+    ]
+  },
+  {
+    "id": 2,
+    "name": "social-media-os",
+    "repo": "charlie947/social-media-skills",
+    "subpath": null,
+    "desc": "The full system behind 350K followers and 100M views/year \u2014 17 skills",
+    "category": "Content",
+    "tags": [
+      "social",
+      "linkedin",
+      "content"
+    ]
+  },
+  {
+    "id": 6,
+    "name": "voice-builder",
+    "repo": "charlie947/social-media-skills",
+    "subpath": "skills/voice-builder",
+    "desc": "Interviews you, analyzes samples, writes about-me.md + voice.md \u2014 stops AI output",
+    "category": "Content",
+    "tags": [
+      "voice",
+      "writing",
+      "personal"
+    ]
+  },
+  {
+    "id": 7,
+    "name": "reels-scripting",
+    "repo": "charlie947/social-media-skills",
+    "subpath": "skills/reels-scripting",
+    "desc": "Reverse-engineers an outlier Reel via Apify + Gemini 2.5 Flash \u2014 writes your script",
+    "category": "Content",
+    "tags": [
+      "reels",
+      "instagram",
+      "video"
+    ]
+  },
+  {
+    "id": 8,
+    "name": "post-scorer",
+    "repo": "charlie947/social-media-skills",
+    "subpath": "skills/post-scorer",
+    "desc": "Pulls your post history via Apify and scores any draft against what performs for you",
+    "category": "Content",
+    "tags": [
+      "linkedin",
+      "scoring",
+      "analytics"
+    ]
+  },
+  {
+    "id": 9,
+    "name": "youtube-thumbnail",
+    "repo": "charlie947/social-media-skills",
+    "subpath": "skills/youtube-thumbnail",
+    "desc": "Video title \u2192 branded YouTube thumbnail prompt for Gemini \u2014 350K-follower CTR playbook",
+    "category": "Content",
+    "tags": [
+      "youtube",
+      "thumbnail",
+      "video"
+    ]
+  },
+  {
+    "id": 10,
+    "name": "hook-generator",
+    "repo": "charlie947/social-media-skills",
+    "subpath": "skills/hook-generator",
+    "desc": "Generates hooks across PAS, AIDA, BAB, STAR, SLAY \u2014 solves the 3-second scroll stop",
+    "category": "Content",
+    "tags": [
+      "hooks",
+      "copywriting",
+      "linkedin"
+    ]
+  },
+  {
+    "id": 14,
+    "name": "tweetclaw",
+    "repo": "Xquik-dev/tweetclaw",
+    "subpath": null,
+    "desc": "40+ X/Twitter actions: post, extract, monitor, compose, schedule \u2014 way beyond basic",
+    "category": "Content",
+    "tags": [
+      "twitter",
+      "x",
+      "automation"
+    ]
+  },
+  {
+    "id": 15,
+    "name": "x-article-publisher",
+    "repo": "wshuyi/x-article-publisher-skill",
+    "subpath": null,
+    "desc": "Publish full articles to X/Twitter directly from Claude Code \u2014 threading + formatting",
+    "category": "Content",
+    "tags": [
+      "twitter",
+      "publishing",
+      "longform"
+    ]
+  },
+  {
+    "id": 29,
+    "name": "twitter-algorithm",
+    "repo": "ComposioHQ/awesome-claude-skills",
+    "subpath": "twitter-algorithm-optimizer",
+    "desc": "Analyzes + rewrites tweets using Twitter's open-source algorithm \u2014 optimizes real reach",
+    "category": "Content",
+    "tags": [
+      "twitter",
+      "algorithm",
+      "reach"
+    ]
+  },
+  {
+    "id": 34,
+    "name": "social-media-research",
+    "repo": "skainguyen1412/social-media-research-skill",
+    "subpath": null,
+    "desc": "Live public opinion + trends on Reddit and X \u2014 sentiment with receipts",
+    "category": "Content",
+    "tags": [
+      "research",
+      "reddit",
+      "twitter"
+    ]
+  },
+  {
+    "id": 11,
+    "name": "humanizer",
+    "repo": "blader/humanizer",
+    "subpath": null,
+    "desc": "Removes AI-writing tells: em-dash overuse, throat-clearing openers, synonym cycling",
+    "category": "Writing",
+    "tags": [
+      "writing",
+      "editing",
+      "humanize"
+    ]
+  },
+  {
+    "id": 13,
+    "name": "beautiful-prose",
+    "repo": "SHADOWPR0/beautiful_prose",
+    "subpath": null,
+    "desc": "Hard-edged writing style contract \u2014 closer to Hemingway than ChatGPT, zero fluff",
+    "category": "Writing",
+    "tags": [
+      "writing",
+      "style",
+      "prose"
+    ]
+  },
+  {
+    "id": 3,
+    "name": "daydream",
+    "repo": "glebis/claude-skills",
+    "subpath": "daydream",
+    "desc": "Mines your knowledge base for non-obvious connections while you sleep \u2014 ~40\u00a2/run",
+    "category": "Research",
+    "tags": [
+      "knowledge",
+      "connections",
+      "background"
+    ]
+  },
+  {
+    "id": 31,
+    "name": "deep-research",
+    "repo": "199-biotechnologies/claude-deep-research-skill",
+    "subpath": null,
+    "desc": "8-phase pipeline: Brave+Serper+Exa+Jina+Firecrawl \u2014 beats OpenAI Deep Research",
+    "category": "Research",
+    "tags": [
+      "research",
+      "search",
+      "sources"
+    ]
+  },
+  {
+    "id": 32,
+    "name": "academic-research",
+    "repo": "Imbad0202/academic-research-skills",
+    "subpath": null,
+    "desc": "Full pipeline: research \u2192 write \u2192 review \u2192 revise \u2192 finalize \u2014 AI pattern checker",
+    "category": "Research",
+    "tags": [
+      "academic",
+      "research",
+      "writing"
+    ]
+  },
+  {
+    "id": 33,
+    "name": "evidence-dialogue",
+    "repo": "glebis/claude-skills",
+    "subpath": "balanced",
+    "desc": "Replaces sycophancy \u2014 5 modes: FULL, Socratic, TLDR, STEELMAN, DECISION",
+    "category": "Research",
+    "tags": [
+      "critical",
+      "thinking",
+      "debate"
+    ]
+  },
+  {
+    "id": 12,
+    "name": "anything-notebooklm",
+    "repo": "joeseesun/anything-to-notebooklm",
+    "subpath": null,
+    "desc": "Converts 15+ sources (YouTube, PDFs, web) into podcasts, presentations, quizzes",
+    "category": "Research",
+    "tags": [
+      "notebooklm",
+      "podcast",
+      "research"
+    ]
+  },
+  {
+    "id": 26,
+    "name": "marketing-module",
+    "repo": "alirezarezvani/claude-skills",
+    "subpath": "marketing-skill",
+    "desc": "43 marketing skills in 7 pods: Content, SEO, CRO, Channels, Growth, Intelligence, Sales",
+    "category": "Marketing",
+    "tags": [
+      "marketing",
+      "seo",
+      "cro"
+    ]
+  },
+  {
+    "id": 27,
+    "name": "marketing-skills-ch",
+    "repo": "coreyhaines31/marketingskills",
+    "subpath": null,
+    "desc": "CRO, copywriting, SEO, analytics, growth engineering, ad creative, Reels/TikTok/Shorts",
+    "category": "Marketing",
+    "tags": [
+      "marketing",
+      "cro",
+      "copywriting"
+    ]
+  },
+  {
+    "id": 28,
+    "name": "email-bible",
+    "repo": "CosmoBlk/email-marketing-bible",
+    "subpath": null,
+    "desc": "55,000-word email marketing guide \u2014 subject lines, lifecycle flows, win-back sequences",
+    "category": "Marketing",
+    "tags": [
+      "email",
+      "marketing",
+      "automation"
+    ]
+  },
+  {
+    "id": 30,
+    "name": "competitive-ads",
+    "repo": "ComposioHQ/awesome-claude-skills",
+    "subpath": "competitive-ads-extractor",
+    "desc": "Pulls competitors' ads from ad libraries \u2014 analyzes messaging + creative patterns",
+    "category": "Marketing",
+    "tags": [
+      "ads",
+      "competitive",
+      "analysis"
+    ]
+  },
+  {
+    "id": 24,
+    "name": "kim-barrett-dr",
+    "repo": "VoltAgent/awesome-agent-skills",
+    "subpath": null,
+    "desc": "Direct-response copy: avatar extraction, Schwartz mapper, headline matrix, objection crusher",
+    "category": "Marketing",
+    "tags": [
+      "copywriting",
+      "direct-response",
+      "ads"
+    ]
+  },
+  {
+    "id": 44,
+    "name": "geo-seo",
+    "repo": "AgriciDaniel/claude-seo",
+    "subpath": null,
+    "desc": "GEO-first SEO: AI search optimization, citability scoring, AI crawler analysis, PDF reports",
+    "category": "Marketing",
+    "tags": [
+      "seo",
+      "geo",
+      "ai-search"
+    ]
+  },
+  {
+    "id": 25,
+    "name": "wondelai-ux-growth",
+    "repo": "wondelai/skills",
+    "subpath": null,
+    "desc": "25 skills grounded in Norman, Cialdini, Ries, Hormozi \u2014 UX, marketing, growth",
+    "category": "Marketing",
+    "tags": [
+      "ux",
+      "growth",
+      "frameworks"
+    ]
+  },
+  {
+    "id": 35,
+    "name": "pm-skills",
+    "repo": "phuryn/pm-skills",
+    "subpath": null,
+    "desc": "100+ PM skills: Discovery, Lean Canvas, JTBD, OKRs, PRDs, pricing, slash commands",
+    "category": "Product",
+    "tags": [
+      "pm",
+      "product",
+      "jtbd"
+    ]
+  },
+  {
+    "id": 36,
+    "name": "jtbd-interview",
+    "repo": "glebis/claude-skills",
+    "subpath": "skill-studio",
+    "desc": "Live Jobs-To-Be-Done interview \u2014 converts customer interviews into briefs + copy",
+    "category": "Product",
+    "tags": [
+      "jtbd",
+      "interviews",
+      "product"
+    ]
+  },
+  {
+    "id": 37,
+    "name": "ai-transformation",
+    "repo": "glebis/claude-skills",
+    "subpath": "context-builder",
+    "desc": "Express (15-20 min) or Deep Dive (60-90 min) AI consulting interview with BCG/Ng frameworks",
+    "category": "Product",
+    "tags": [
+      "consulting",
+      "ai",
+      "strategy"
+    ]
+  },
+  {
+    "id": 41,
+    "name": "superpowers",
+    "repo": "obra/superpowers",
+    "subpath": null,
+    "desc": "The most popular community skill \u2014 14 bundled skills, 725K+ installs",
+    "category": "Engineering",
+    "tags": [
+      "coding",
+      "engineering",
+      "senior"
+    ]
+  },
+  {
+    "id": 42,
+    "name": "repomix",
+    "repo": "yamadashy/repomix",
+    "subpath": null,
+    "desc": "Packs your entire repo into one AI-friendly file \u2014 fastest codebase feeding",
+    "category": "Engineering",
+    "tags": [
+      "repo",
+      "context",
+      "tools"
+    ]
+  },
+  {
+    "id": 43,
+    "name": "antfu-skills",
+    "repo": "antfu/skills",
+    "subpath": null,
+    "desc": "Production-grade skills curated by Anthony Fu \u2014 Vue/Vite core team member",
+    "category": "Engineering",
+    "tags": [
+      "vue",
+      "vite",
+      "production"
+    ]
+  },
+  {
+    "id": 5,
+    "name": "autoresearch",
+    "repo": "uditgoenka/autoresearch",
+    "subpath": null,
+    "desc": "Karpathy-inspired self-improvement engine \u2014 9 modes: code-pr, deployment, marketing\u2026",
+    "category": "Engineering",
+    "tags": [
+      "research",
+      "automation",
+      "ai"
+    ]
+  },
+  {
+    "id": 45,
+    "name": "dev-browser",
+    "repo": "SawyerHood/dev-browser",
+    "subpath": null,
+    "desc": "Gives your agent a web browser \u2014 end-to-end QA, research, automation",
+    "category": "Engineering",
+    "tags": [
+      "browser",
+      "automation",
+      "qa"
+    ]
+  },
+  {
+    "id": 46,
+    "name": "vexor-search",
+    "repo": "scarletkc/vexor",
+    "subpath": null,
+    "desc": "Vector-powered semantic file search \u2014 local, private, fast",
+    "category": "Engineering",
+    "tags": [
+      "search",
+      "vector",
+      "semantic"
+    ]
+  },
+  {
+    "id": 47,
+    "name": "skill-seekers",
+    "repo": "yusufkaraaslan/Skill_Seekers",
+    "subpath": null,
+    "desc": "Convert any docs site, GitHub repo, or PDF into a Claude skill in minutes",
+    "category": "Engineering",
+    "tags": [
+      "skills",
+      "converter",
+      "docs"
+    ]
+  },
+  {
+    "id": 48,
+    "name": "web-scraper",
+    "repo": "yfe404/web-scraper",
+    "subpath": null,
+    "desc": "Intelligent scraper: curl \u2192 quality gate \u2192 stealth browser \u2192 API sniff \u2192 validate",
+    "category": "Engineering",
+    "tags": [
+      "scraping",
+      "web",
+      "data"
+    ]
+  },
+  {
+    "id": 4,
+    "name": "remotion",
+    "repo": "remotion-dev/skills",
+    "subpath": "skills/remotion",
+    "desc": "Make videos programmatically in React \u2014 30+ rules: 3D, TikTok captions, FFmpeg",
+    "category": "Media",
+    "tags": [
+      "video",
+      "remotion",
+      "react"
+    ]
+  },
+  {
+    "id": 38,
+    "name": "ai-video-toolkit",
+    "repo": "digitalsamba/claude-code-video-toolkit",
+    "subpath": null,
+    "desc": "End-to-end AI-native video pipeline: script \u2192 voiceover \u2192 Remotion \u2192 MP4",
+    "category": "Media",
+    "tags": [
+      "video",
+      "ai",
+      "voiceover"
+    ]
+  },
+  {
+    "id": 39,
+    "name": "ai-music-production",
+    "repo": "bitwize-music-studio/claude-ai-music-skills",
+    "subpath": null,
+    "desc": "Full lifecycle: lyrics \u2192 Suno prompts \u2192 per-stem mixing \u2192 mastering \u2192 distribution",
+    "category": "Media",
+    "tags": [
+      "music",
+      "suno",
+      "production"
+    ]
+  },
+  {
+    "id": 40,
+    "name": "generative-media",
+    "repo": "SamurAIGPT/Generative-Media-Skills",
+    "subpath": null,
+    "desc": "Multi-modal generative media: image, video, audio across AI providers",
+    "category": "Media",
+    "tags": [
+      "generative",
+      "multimodal",
+      "media"
+    ]
+  },
+  {
+    "id": 49,
+    "name": "personal-health",
+    "repo": "Aperivue/medsci-skills",
+    "subpath": null,
+    "desc": "Analyzes medical reports, tracks health metrics, personalized wellness suggestions",
+    "category": "Health",
+    "tags": [
+      "health",
+      "medical",
+      "wellness"
+    ]
+  },
+  {
+    "id": 50,
+    "name": "dna-analysis",
+    "repo": "shmlkv/dna-claude-analysis",
+    "subpath": null,
+    "desc": "Personal genome analysis from 23andMe/Ancestry \u2014 17 categories including pharmacogenomics",
+    "category": "Health",
+    "tags": [
+      "dna",
+      "genome",
+      "ancestry"
+    ]
+  }
+]

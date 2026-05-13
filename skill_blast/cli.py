@@ -27,6 +27,12 @@ from .installer import (check_git, install_skill, uninstall_skill,
                         health_check, batch_update_repos, CACHE_DIR, STORE_DIR)
 from .skills import (ALL_SKILLS, CATEGORIES, CATEGORY_COLORS,
                      CATEGORY_ICONS, Skill, SKILLS_BY_ID)
+from .github_installer import (
+    install_from_github, uninstall_from_github,
+    get_install_status, resolve_target_agents, resolve_sub_agents,
+    read_instruction_file, parse_instruction_file,
+)
+from .registry import get_installed, is_installed
 
 # Fix Unicode output on Windows (box-drawing chars + emoji in BANNER/agents).
 # Without this, CP1252/CP437 terminals raise UnicodeEncodeError on first print.
@@ -348,6 +354,163 @@ def cmd_check() -> None:
     console.print()
 
 
+# ── GitHub install ──────────────────────────────────────────────────────────────
+
+def cmd_github_install(
+    skill_ids: list[int],
+    agent_keys: list[str] | None = None,
+    dry_run: bool = False,
+    update: bool = False,
+) -> None:
+    """Install specific skills by ID directly from GitHub with full instruction parsing."""
+    # Git check
+    git_ok, git_msg = check_git()
+    if not git_ok:
+        console.print(f"[bold red]Error:[/] git is required — {git_msg}")
+        sys.exit(1)
+
+    # Resolve skills
+    skills_to_install = []
+    for sid in skill_ids:
+        skill = SKILLS_BY_ID.get(sid)
+        if not skill:
+            console.print(f"[bold red]Error:[/] Skill ID {sid} not found.")
+            continue
+        skills_to_install.append(skill)
+
+    if not skills_to_install:
+        console.print("[yellow]No valid skills to install.[/]")
+        return
+
+    console.print(
+        f"[bold cyan]GitHub Install[/] — {len(skills_to_install)} skill(s)\n"
+    )
+
+    if dry_run:
+        console.print("[bold yellow]DRY RUN — no files will be written[/]\n")
+
+    all_results = []
+
+    with Progress(
+        SpinnerColumn(),
+        TextColumn("[progress.description]{task.description:<40}"),
+        BarColumn(),
+        MofNCompleteColumn(),
+        TaskProgressColumn(),
+        TimeElapsedColumn(),
+        console=console,
+        transient=False,
+    ) as progress:
+        task = progress.add_task("[cyan]Installing from GitHub…", total=len(skills_to_install))
+
+        for skill in skills_to_install:
+            color = CATEGORY_COLORS.get(skill.category, "white")
+            progress.update(
+                task,
+                description=(
+                    f"[{color}]{CATEGORY_ICONS.get(skill.category, '•')} {skill.category:10}[/] "
+                    f"[bold]{skill.name}[/]"
+                ),
+            )
+
+            result = install_from_github(
+                skill,
+                agent_keys=agent_keys,
+                dry_run=dry_run,
+                update=update,
+            )
+            all_results.append(result)
+
+            if result["ok"]:
+                agents_str = ", ".join(
+                    AGENTS[k]["name"] for k in result["agents_resolved"] if k in AGENTS
+                )
+                sub_str = ""
+                if result["sub_agents_installed"]:
+                    sub_str = f"  [dim](+{len(result['sub_agents_installed'])} sub-agents)[/]"
+                parsed_str = " [dim](instructions parsed)[/]" if result["instruction_parsed"] else ""
+                console.log(
+                    f"  [green]✓[/] [bold]{skill.name}[/] → {agents_str}{parsed_str}{sub_str}"
+                )
+            else:
+                console.log(
+                    f"  [red]✗[/] [bold]{skill.name}[/]  [red]{result['error']}[/]"
+                )
+
+            progress.advance(task)
+
+    # Summary
+    ok = [r for r in all_results if r["ok"]]
+    failed = [r for r in all_results if not r["ok"]]
+    total_sub = sum(len(r["sub_agents_installed"]) for r in ok)
+
+    console.print()
+    console.print(Panel(
+        f"[bold green]✓ {len(ok)} installed[/]    "
+        + (f"[cyan]+{total_sub} sub-agents[/]    " if total_sub else "")
+        + (f"[bold red]✗ {len(failed)} failed[/]" if failed else "[green]0 failures[/]"),
+        title="[bold]GitHub Install Summary[/]",
+        border_style="bright_black",
+    ))
+
+    if ok:
+        console.print()
+        detected_agents = set()
+        for r in ok:
+            detected_agents.update(r["agents_resolved"])
+        console.print(Panel(
+            "[bold]Installed to agents:[/]\n"
+            + "\n".join(
+                f"  {AGENTS[k]['icon']} [cyan]{AGENTS[k]['name']:15}[/] {AGENTS[k]['note']}"
+                for k in sorted(detected_agents)
+                if k in AGENTS
+            )
+            + "\n\n[dim]Run [/][bold]skill-blast --status[/][dim] to see all installed skills.[/]",
+            title="[bold green]Done! 🎉[/]",
+            border_style="green",
+        ))
+
+
+# ── Install status ──────────────────────────────────────────────────────────────
+
+def cmd_install_status() -> None:
+    """Show the installation status of all skills from the local registry."""
+    status = get_install_status()
+    installed_count = sum(1 for v in status.values() if v["installed"])
+
+    if installed_count == 0:
+        console.print("[yellow]No skills are currently installed.[/]")
+        console.print("[dim]Use [/][bold]skill-blast --github-install <ID>[/][dim] to install skills.[/]")
+        return
+
+    table = Table(
+        title=f"[bold cyan]Installed Skills ({installed_count}/{len(status)})[/]",
+        box=box.ROUNDED,
+        show_lines=False,
+    )
+    table.add_column("ID", justify="right", style="cyan", width=4)
+    table.add_column("Skill", style="bold white", width=25)
+    table.add_column("Status", width=10)
+    table.add_column("Agents", style="dim")
+    table.add_column("Updated", style="dim", width=20)
+
+    for skill in sorted(ALL_SKILLS, key=lambda x: (x.category, x.id)):
+        info = status.get(skill.name, {})
+        if info.get("installed"):
+            agents_str = ", ".join(info.get("agents", []))
+            updated = info.get("updated_at", "")[:19].replace("T", " ") if info.get("updated_at") else ""
+            table.add_row(
+                str(skill.id),
+                skill.name,
+                "[green]✓ installed[/]",
+                agents_str,
+                updated,
+            )
+
+    console.print(table)
+    console.print()
+
+
 # ── Progress install ────────────────────────────────────────────────────────────
 
 def run_install(
@@ -506,6 +669,11 @@ Examples:
                         help="Category for the custom skill (default: Custom)")
     parser.add_argument("--desc", metavar="DESCRIPTION", default="Custom user-added skill",
                         help="Description for the custom skill")
+    parser.add_argument("--github-install", type=int, nargs="+", metavar="ID",
+                        help="Install specific skill(s) by ID directly from GitHub with "
+                             "auto-detected agents and sub-agent support")
+    parser.add_argument("--status", action="store_true",
+                        help="Show install status of all skills from the local registry")
     args = parser.parse_args()
 
     # ── List only ──────────────────────────────────────────────────────────────
@@ -534,6 +702,23 @@ Examples:
     if args.check:
         print_banner()
         cmd_check()
+        return
+
+    # ── Install status ─────────────────────────────────────────────────────────
+    if args.status:
+        print_banner()
+        cmd_install_status()
+        return
+
+    # ── GitHub install (by skill ID) ───────────────────────────────────────────
+    if args.github_install:
+        print_banner()
+        cmd_github_install(
+            skill_ids=args.github_install,
+            agent_keys=args.agents,
+            dry_run=args.dry_run,
+            update=args.update,
+        )
         return
 
     print_banner()

@@ -15,6 +15,7 @@ from pathlib import Path
 from typing import Optional
 
 from .skills import Skill
+from .registry import register_install, register_uninstall
 
 HOME = Path.home()
 IS_WINDOWS = platform.system() == "Windows"
@@ -256,6 +257,12 @@ def install_skill(
 
 
     result["ok"] = True
+
+    # Track in local registry
+    if not dry_run and result["ok"]:
+        agent_names = [d.parent.parent.name for d in agent_dirs]
+        register_install(skill.name, skill.id, agent_names)
+
     return result
 
 
@@ -301,6 +308,11 @@ def uninstall_skill(skill: Skill, agent_dirs: list[Path]) -> dict:
             return result
 
     result["ok"] = True
+
+    # Remove from registry
+    if result["ok"]:
+        register_uninstall(skill.name)
+
     return result
 
 
