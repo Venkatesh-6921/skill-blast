@@ -4,14 +4,14 @@ build-backend = "hatchling.build"
 
 [project]
 name = "skill-blast"
-version = "2.2.1"
+version = "1.0.0"
 description = "One-click installer for 50 top AI agent skills — Claude Code, OpenCode, Antigravity, Cursor and more"
 readme = "README.md"
 license = { text = "MIT" }
 authors = [{ name = "KaizenCode21" }]
 keywords = ["claude", "opencode", "ai", "skills", "claude-code", "antigravity", "cursor", "llm", "gemini"]
 classifiers = [
-    "Development Status :: 4 - Beta",
+    "Development Status :: 5 - Production/Stable",
     "Environment :: Console",
     "Intended Audience :: Developers",
     "Intended Audience :: End Users/Desktop",
@@ -22,6 +22,7 @@ classifiers = [
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
     "Topic :: Software Development :: Libraries",
     "Topic :: Utilities",
 ]
@@ -54,11 +55,12 @@ addopts = "-v --tb=short"
 
 [tool.coverage.run]
 source = ["skill_blast"]
-omit = ["tests/*", "skill_blast/tui.py", "skill_blast/__main__.py"]
+omit = ["tests/*", "skill_blast/tui.py", "skill_blast/__main__.py", "skill_blast/cli.py"]
 
 [tool.coverage.report]
 exclude_lines = [
     "pragma: no cover",
     "if __name__",
     "pass",
+    "raise NotImplementedError",
 ]
