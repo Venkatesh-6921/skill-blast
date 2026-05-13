@@ -7,7 +7,7 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
-## [2.2.0] — 2026-05-13
+## [2.2.1] — 2026-05-13
 
 ### Added
 
