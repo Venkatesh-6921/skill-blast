@@ -5,9 +5,14 @@ Source: 50 Best Claude Code Skills (community-curated list).
 
 import contextlib
 import json
+import logging
+import os
+import warnings
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Optional
+
+logger = logging.getLogger("skill_blast")
 
 
 @dataclass
@@ -281,8 +286,8 @@ if _CUSTOM_SKILLS_FILE.exists():
         custom_data = json.loads(_CUSTOM_SKILLS_FILE.read_text(encoding="utf-8"))
         for c in custom_data:
             ALL_SKILLS.append(Skill(**c))
-    except Exception:
-        pass
+    except Exception as e:
+        warnings.warn(f"Could not load custom skills from {_CUSTOM_SKILLS_FILE}: {e}", stacklevel=2)
 
 # Lookup helpers
 SKILLS_BY_ID: dict[int, Skill] = {s.id: s for s in ALL_SKILLS}
@@ -318,7 +323,9 @@ def add_custom_skill(repo: str, category: str = "Custom", desc: str = "Custom us
     })
 
     _CUSTOM_SKILLS_FILE.parent.mkdir(parents=True, exist_ok=True)
-    _CUSTOM_SKILLS_FILE.write_text(json.dumps(custom, indent=2), encoding="utf-8")
+    tmp = _CUSTOM_SKILLS_FILE.with_suffix(".tmp")
+    tmp.write_text(json.dumps(custom, indent=2), encoding="utf-8")
+    os.replace(tmp, _CUSTOM_SKILLS_FILE)  # Atomic write
 
     ALL_SKILLS.append(skill)
     SKILLS_BY_ID[skill.id] = skill

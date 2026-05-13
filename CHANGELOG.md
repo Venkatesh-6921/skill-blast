@@ -7,6 +7,16 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+## [1.0.0] — 2026-05-13
+
+### Changed
+
+- **Production/Stable Status**: Promoted package from Beta to Stable.
+- **CI Hardening**: Bumped coverage gate to 70%+ (excluding interactive UI), added Python 3.13 support, and integrated Ruff linting.
+- **Reliability**: Implemented atomic writes for registry and custom skills to prevent file corruption.
+- **Observability**: Added `--verbose` flag for structured debug logging.
+- **UX**: Updated installers to prefer `uv` for 10x faster installations.
+
 ## [2.2.1] — 2026-05-13
 
 ### Added
