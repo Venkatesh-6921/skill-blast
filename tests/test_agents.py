@@ -3,8 +3,6 @@
 from pathlib import Path
 from unittest.mock import patch
 
-import pytest
-
 from skill_blast.agents import AGENTS, detect_agents
 
 

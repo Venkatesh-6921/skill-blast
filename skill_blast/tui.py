@@ -2,9 +2,9 @@ import os
 import re
 from collections import defaultdict
 
-from textual.app import App, ComposeResult
-from textual.widgets import Header, Footer, TabbedContent, TabPane, DataTable
 from rich.text import Text
+from textual.app import App, ComposeResult
+from textual.widgets import DataTable, Footer, Header, TabbedContent, TabPane
 
 from .skills import ALL_SKILLS, CATEGORIES
 

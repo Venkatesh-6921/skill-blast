@@ -29,6 +29,10 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -e ".[dev]"
+          pip install ruff
+
+      - name: Lint with ruff
+        run: ruff check skill_blast/ tests/
 
       - name: Import check
         run: python -c "from skill_blast.cli import main; from skill_blast.skills import ALL_SKILLS; print(f'OK — {len(ALL_SKILLS)} skills loaded')"
@@ -39,8 +43,8 @@ jobs:
       - name: CLI --dry-run smoke test
         run: skill-blast --all --dry-run --agents claude-code
 
-      - name: Run tests
-        run: pytest tests/ -v
+      - name: Run tests with coverage
+        run: pytest tests/ -v --cov=skill_blast --cov-report=term-missing --cov-fail-under=40
 
   publish:
     name: Publish to PyPI

@@ -1,22 +1,18 @@
 """Integration tests for installer — uses mocked filesystem and subprocess."""
 
 import platform
-from pathlib import Path
-from unittest.mock import MagicMock, patch
+from unittest.mock import patch
 
 import pytest
 
 from skill_blast.installer import (
-    install_skill,
-    uninstall_skill,
-    health_check,
     check_git,
     ensure_repo,
-    CACHE_DIR,
-    STORE_DIR,
+    health_check,
+    install_skill,
+    uninstall_skill,
 )
-from skill_blast.skills import ALL_SKILLS, Skill
-
+from skill_blast.skills import Skill
 
 # ── Fixtures ──────────────────────────────────────────────────────────────────
 

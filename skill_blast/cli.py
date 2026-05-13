@@ -6,33 +6,49 @@ from __future__ import annotations
 
 import argparse
 import concurrent.futures
+import logging
 import sys
-import platform
 from pathlib import Path
 
 import questionary
+from rich import box
 from rich.console import Console
 from rich.panel import Panel
-from rich.progress import (BarColumn, MofNCompleteColumn, Progress,
-                           SpinnerColumn, TaskProgressColumn, TextColumn,
-                           TimeElapsedColumn)
-from rich.prompt import Confirm, Prompt
+from rich.progress import (
+    BarColumn,
+    MofNCompleteColumn,
+    Progress,
+    SpinnerColumn,
+    TaskProgressColumn,
+    TextColumn,
+    TimeElapsedColumn,
+)
+from rich.prompt import Confirm
 from rich.table import Table
-from rich.text import Text
-from rich import box
 
 from . import __version__
 from .agents import AGENTS, detect_agents
-from .installer import (check_git, install_skill, uninstall_skill,
-                        health_check, batch_update_repos, CACHE_DIR, STORE_DIR)
-from .skills import (ALL_SKILLS, CATEGORIES, CATEGORY_COLORS,
-                     CATEGORY_ICONS, Skill, SKILLS_BY_ID)
 from .github_installer import (
-    install_from_github, uninstall_from_github,
-    get_install_status, resolve_target_agents, resolve_sub_agents,
-    read_instruction_file, parse_instruction_file,
+    get_install_status,
+    install_from_github,
 )
-from .registry import get_installed, is_installed
+from .installer import (
+    CACHE_DIR,
+    STORE_DIR,
+    batch_update_repos,
+    check_git,
+    health_check,
+    install_skill,
+    uninstall_skill,
+)
+from .skills import (
+    ALL_SKILLS,
+    CATEGORIES,
+    CATEGORY_COLORS,
+    CATEGORY_ICONS,
+    SKILLS_BY_ID,
+    Skill,
+)
 
 # Fix Unicode output on Windows (box-drawing chars + emoji in BANNER/agents).
 # Without this, CP1252/CP437 terminals raise UnicodeEncodeError on first print.
@@ -99,7 +115,7 @@ def run_wizard() -> tuple[list[str], list[str], bool]:
             value=key,
             checked=is_detected
         ))
-        
+
     chosen_agents = questionary.checkbox(
         "Which AI agents do you want to install skills for?",
         choices=agent_choices,
@@ -109,7 +125,7 @@ def run_wizard() -> tuple[list[str], list[str], bool]:
     # If the user cancels (Ctrl+C), it returns None
     if chosen_agents is None:
         sys.exit(0)
-    
+
     if not chosen_agents:
         chosen_agents = list(detected.keys()) or ["claude-code"]
 
@@ -137,7 +153,7 @@ def run_wizard() -> tuple[list[str], list[str], bool]:
 
     if chosen_cats is None:
         sys.exit(0)
-    
+
     if not chosen_cats:
         chosen_cats = cats
 
@@ -171,7 +187,7 @@ def cmd_list(category_filter: list[str] | None = None) -> None:
     """Launch the interactive TUI or print static list if not a TTY."""
     import os
     import sys
-    
+
     # Fallback for non-interactive environments (CI, pipes)
     if not sys.stdout.isatty() or os.environ.get("SKILLBLAST_NO_TUI"):
         skills = ALL_SKILLS if not category_filter else [s for s in ALL_SKILLS if s.category in category_filter]
@@ -191,7 +207,7 @@ def cmd_list(category_filter: list[str] | None = None) -> None:
         for category, cat_skills in skills_by_category.items():
             # Minimalist header for static output
             console.print(f"[bold underline]{category}[/]")
-            
+
             table = Table(box=box.SIMPLE, show_header=True, header_style="bold dim", expand=True)
             table.add_column("ID", justify="right", style="cyan", width=4, no_wrap=True)
             table.add_column("Skill", style="white", width=35)
@@ -208,10 +224,10 @@ def cmd_list(category_filter: list[str] | None = None) -> None:
         return
 
     from .tui import SkillBlastTUI
-    
+
     if category_filter:
         os.environ["SKILLBLAST_TUI_FILTER"] = ",".join(category_filter)
-        
+
     app = SkillBlastTUI()
     app.run()
 
@@ -349,7 +365,7 @@ def cmd_check() -> None:
         console.print()
         console.print("  [dim]Tip: run [/][bold]skill-blast --update[/][dim] to repair broken links.[/]")
     else:
-        console.print(f"  [green]✓[/] No broken symlinks")
+        console.print("  [green]✓[/] No broken symlinks")
 
     console.print()
 
@@ -674,7 +690,19 @@ Examples:
                              "auto-detected agents and sub-agent support")
     parser.add_argument("--status", action="store_true",
                         help="Show install status of all skills from the local registry")
+    parser.add_argument("--verbose", action="store_true",
+                        help="Enable debug logging for diagnosing install issues")
     args = parser.parse_args()
+
+    # ── Configure logging ──────────────────────────────────────────────────────
+    if args.verbose:
+        logging.basicConfig(
+            level=logging.DEBUG,
+            format="%(asctime)s [%(name)s] %(levelname)s: %(message)s",
+            datefmt="%H:%M:%S",
+        )
+    else:
+        logging.basicConfig(level=logging.WARNING)
 
     # ── List only ──────────────────────────────────────────────────────────────
     if args.list:

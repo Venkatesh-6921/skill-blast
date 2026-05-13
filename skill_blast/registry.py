@@ -6,6 +6,7 @@ Schema: { "<skill_name>": { "skill_id": int, "installed_at": str, "updated_at": 
 """
 
 import json
+import os
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Optional
@@ -25,9 +26,11 @@ def _load() -> dict:
 
 
 def _save(data: dict) -> None:
-    """Persist the registry to disk."""
+    """Persist the registry to disk using atomic write (temp file + os.replace)."""
     REGISTRY_FILE.parent.mkdir(parents=True, exist_ok=True)
-    REGISTRY_FILE.write_text(json.dumps(data, indent=2), encoding="utf-8")
+    tmp = REGISTRY_FILE.with_suffix(".tmp")
+    tmp.write_text(json.dumps(data, indent=2), encoding="utf-8")
+    os.replace(tmp, REGISTRY_FILE)  # atomic on POSIX and Windows
 
 
 def register_install(skill_name: str, skill_id: int, agents: list[str], version: str = "latest") -> None:

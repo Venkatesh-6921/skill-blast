@@ -59,20 +59,31 @@ if ! command -v git &>/dev/null; then
 fi
 success "git found: $(git --version)"
 
-# ── pip install skill-blast ────────────────────────────────────────────────────
-info "Installing skill-blast via pip…"
+# ── Install skill-blast ────────────────────────────────────────────────────────
+info "Installing skill-blast…"
 
-# Try pip install; handle externally-managed environments (Fedora/Ubuntu 23+)
-if ! "$PYTHON" -m pip install --quiet --upgrade skill-blast 2>/dev/null; then
-    warn "System pip blocked. Trying --break-system-packages…"
-    if ! "$PYTHON" -m pip install --quiet --upgrade skill-blast --break-system-packages 2>/dev/null; then
-        warn "Trying user install…"
-        "$PYTHON" -m pip install --quiet --upgrade skill-blast --user \
-            || die "pip install failed. Try: pipx install skill-blast"
+# Prefer uv if available
+if command -v uv &>/dev/null; then
+    info "Found uv, using it for installation…"
+    if uv pip install --upgrade skill-blast; then
+        success "skill-blast installed via uv!"
+    else
+        warn "uv install failed, falling back to pip…"
     fi
 fi
 
-success "skill-blast installed!"
+if [[ -z "$(command -v skill-blast || echo "")" ]]; then
+    # Try pip install; handle externally-managed environments (Fedora/Ubuntu 23+)
+    if ! "$PYTHON" -m pip install --quiet --upgrade skill-blast 2>/dev/null; then
+        warn "System pip blocked. Trying --break-system-packages…"
+        if ! "$PYTHON" -m pip install --quiet --upgrade skill-blast --break-system-packages 2>/dev/null; then
+            warn "Trying user install…"
+            "$PYTHON" -m pip install --quiet --upgrade skill-blast --user \
+                || die "pip install failed. Try: pipx install skill-blast"
+        fi
+    fi
+    success "skill-blast installed via pip!"
+fi
 
 # ── Verify ─────────────────────────────────────────────────────────────────────
 # Try to find the skill-blast binary

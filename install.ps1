@@ -59,19 +59,33 @@ try {
     exit 1
 }
 
-# ── pip install skill-blast ────────────────────────────────────────────────────
-Write-Info "Installing skill-blast via pip…"
-try {
-    & $PythonCmd -m pip install --quiet --upgrade skill-blast
-    Write-Success "skill-blast installed!"
-} catch {
-    Write-Warn "Standard install failed, trying user install…"
+# ── Install skill-blast ────────────────────────────────────────────────────────
+Write-Info "Installing skill-blast…"
+
+# Prefer uv if available
+if (Get-Command uv -ErrorAction SilentlyContinue) {
+    Write-Info "Found uv, using it for installation…"
     try {
-        & $PythonCmd -m pip install --quiet --upgrade skill-blast --user
-        Write-Success "skill-blast installed (user mode)!"
+        uv pip install --upgrade skill-blast
+        Write-Success "skill-blast installed via uv!"
     } catch {
-        Write-Err "pip install failed. Please try: pip install skill-blast"
-        exit 1
+        Write-Warn "uv install failed, falling back to pip…"
+    }
+}
+
+if (-not (Get-Command skill-blast -ErrorAction SilentlyContinue)) {
+    try {
+        & $PythonCmd -m pip install --quiet --upgrade skill-blast
+        Write-Success "skill-blast installed!"
+    } catch {
+        Write-Warn "Standard install failed, trying user install…"
+        try {
+            & $PythonCmd -m pip install --quiet --upgrade skill-blast --user
+            Write-Success "skill-blast installed (user mode)!"
+        } catch {
+            Write-Err "pip install failed. Please try: pip install skill-blast"
+            exit 1
+        }
     }
 }
 
